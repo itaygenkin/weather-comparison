@@ -1,4 +1,4 @@
-package com.itay.weather.processor.configuration;
+package com.itay.weather.backend.configuration;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,9 +8,8 @@ import org.springframework.stereotype.Component;
 @Setter
 @Getter
 @Component
-@ConfigurationProperties(prefix = "backend")
-public class BackendProperties {
+@ConfigurationProperties(prefix = "processor")
+public class ProcessorProperties {
 
     private String baseUrl;
-
 }

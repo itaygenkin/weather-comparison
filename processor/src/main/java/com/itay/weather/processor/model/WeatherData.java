@@ -1,4 +1,4 @@
-package com.itay.weather.backend.model;
+package com.itay.weather.processor.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

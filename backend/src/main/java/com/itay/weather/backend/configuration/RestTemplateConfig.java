@@ -1,4 +1,4 @@
-package com.itay.weather.processor.configuration;
+package com.itay.weather.backend.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

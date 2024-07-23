@@ -16,15 +16,22 @@ public class MinerService {
     public void fetchAndSendData() {
         WeatherDataDto data = fetchDataFromApi();
         sendDataToKafka(data);
+//        kafkaTemplate.send("weatherData", "testing");
     }
 
     private WeatherDataDto fetchDataFromApi() {
         String accuApi = "";
         // TODO: implement
-        return null;
+        return WeatherDataDto
+                .builder()
+                .source("accu-weather")
+                .humidity(70.0F)
+                .temperature(30.0F)
+                .build();
     }
 
     private void sendDataToKafka(WeatherDataDto weatherData) {
-        kafkaTemplate.send("weather-data", weatherData);
+        kafkaTemplate.send("weatherData", weatherData);
     }
+
 }

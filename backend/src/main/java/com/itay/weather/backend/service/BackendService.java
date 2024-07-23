@@ -1,10 +1,13 @@
 package com.itay.weather.backend.service;
 
 import com.itay.weather.backend.dto.WeatherDataDto;
-import com.itay.weather.backend.model.WeatherData;
-import com.itay.weather.backend.repository.WeatherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,29 +15,27 @@ import java.util.List;
 @Service
 public class BackendService {
 
-    private final WeatherRepository weatherRepository;
+    private final RestTemplate restTemplate;
 
     @Autowired
-    public BackendService(WeatherRepository weatherRepository) {
-        this.weatherRepository = weatherRepository;
-    }
-
-    public void saveData(List<WeatherDataDto> weatherDataList){
-        // TODO: implement
-        weatherDataList.stream().map(this::convertWeatherDataDtoToWeatherData).forEach(weatherRepository::save);
-    }
-
-    private WeatherData convertWeatherDataDtoToWeatherData(WeatherDataDto weatherDataDto){
-        return WeatherData.builder()
-                .source(weatherDataDto.getSource())
-                .time(weatherDataDto.getTime())
-                .temperature(weatherDataDto.getTemperature())
-                .humidity(weatherDataDto.getHumidity())
-                .build();
+    public BackendService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
     public List<WeatherDataDto> getWeatherData() {
-        // TODO: implement
-        return new ArrayList<>();
+        String url = "http://localhost:8081/api/weather";
+        try {
+            ResponseEntity<List<WeatherDataDto>> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<WeatherDataDto>>() {}
+            );
+            return response.getBody();
+        }
+        catch (RestClientException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
 }

@@ -23,9 +23,4 @@ public class BackendController {
         return ResponseEntity.ok(weatherData);
     }
 
-    @PostMapping("/save-data")
-    public ResponseEntity<Void> saveWeatherData(@RequestBody List<WeatherDataDto> weatherDataDtoList) {
-        backendService.saveData(weatherDataDtoList);
-        return ResponseEntity.noContent().build();
-    }
 }

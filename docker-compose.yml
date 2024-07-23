@@ -1,6 +1,7 @@
 services:
   zookeeper:
     image: zookeeper:3.6.3
+    container_name: zookeeper
     ports:
       - "2181:2181"
   kafka:
