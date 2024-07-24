@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class WeatherDataDto {
     private String source;
+    private String location;
     private LocalDateTime time;
-    private Float temperature;
-    private Float humidity;
+    private Double temperature;
+    private Double humidity;
 }

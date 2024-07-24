@@ -16,6 +16,7 @@ import java.util.List;
 public class BackendService {
 
     private final RestTemplate restTemplate;
+    private final String[] minerNames = {"accu-weather"/*, "tomorrow", "open-weather"*/};
 
     @Autowired
     public BackendService(RestTemplate restTemplate) {
@@ -37,5 +38,19 @@ public class BackendService {
             e.printStackTrace();
             return new ArrayList<>();
         }
+    }
+
+    public boolean trigger() {
+        String baseUrl = "http://localhost:8091/";
+        try {
+            for (String minerName : minerNames) {
+                restTemplate.exchange(baseUrl + minerName, HttpMethod.POST, null,
+                        new ParameterizedTypeReference<Void>() {});
+            }
+        }
+        catch (RestClientException e){
+            return false;
+        }
+        return true;
     }
 }

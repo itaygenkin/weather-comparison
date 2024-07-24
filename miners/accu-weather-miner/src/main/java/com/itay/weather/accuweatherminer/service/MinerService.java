@@ -1,37 +1,49 @@
 package com.itay.weather.accuweatherminer.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itay.weather.accuweatherminer.dto.WeatherDataDto;
-import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class MinerService {
 
-    private final KafkaTemplate<String, WeatherDataDto> kafkaTemplate;
+    private final RestTemplate restTemplate;
+    private final String apiKey;
+    private final String apiUrl;
 
-    public MinerService(KafkaTemplate<String, WeatherDataDto> kafkaTemplate) {
-        this.kafkaTemplate = kafkaTemplate;
+    @Autowired
+    public MinerService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+        this.apiKey = System.getProperty("ACCU_WEATHER_API_KEY");
+        this.apiUrl = System.getProperty("ACCU_WEATHER_API_URL");
     }
 
-    public void fetchAndSendData() {
-        WeatherDataDto data = fetchDataFromApi();
-        sendDataToKafka(data);
-//        kafkaTemplate.send("weatherData", "testing");
+    public WeatherDataDto fetchAndSendData() {
+        String json = fetchDataFromApi();
+        return convertJsonToWeatherDataDto(json);
     }
 
-    private WeatherDataDto fetchDataFromApi() {
-        String accuApi = "";
+    private String fetchDataFromApi() {
+        String accuWeatherApiUrl = apiUrl + apiKey;
+        try {
+            // TODO: process response
+            ResponseEntity<String> response = restTemplate.getForEntity(
+                    accuWeatherApiUrl, String.class
+            );
+            return response.getBody();
+        } catch (RestClientException e) {
+            return null;
+        }
+    }
+
+    private WeatherDataDto convertJsonToWeatherDataDto(String json) {
         // TODO: implement
-        return WeatherDataDto
-                .builder()
-                .source("accu-weather")
-                .humidity(70.0F)
-                .temperature(30.0F)
-                .build();
-    }
-
-    private void sendDataToKafka(WeatherDataDto weatherData) {
-        kafkaTemplate.send("weatherData", weatherData);
+        ObjectMapper objectMapper = new ObjectMapper();
+        return null;
     }
 
 }

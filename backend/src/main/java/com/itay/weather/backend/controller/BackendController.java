@@ -23,4 +23,11 @@ public class BackendController {
         return ResponseEntity.ok(weatherData);
     }
 
+    @PostMapping("/trigger")
+    public ResponseEntity<Void> triggerMiners(){
+        if (backendService.trigger())
+            return ResponseEntity.ok().build();
+        return ResponseEntity.badRequest().build();
+    }
+
 }

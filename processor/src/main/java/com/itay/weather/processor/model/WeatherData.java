@@ -20,7 +20,8 @@ public class WeatherData {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String source;
+    private String location;
     private LocalDateTime time;
-    private float temperature;
-    private float humidity;
+    private Double temperature;
+    private Double humidity;
 }
