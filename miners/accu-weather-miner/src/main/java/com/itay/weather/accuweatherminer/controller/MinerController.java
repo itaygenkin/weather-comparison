@@ -1,12 +1,16 @@
 package com.itay.weather.accuweatherminer.controller;
 
-import com.itay.weather.accuweatherminer.dto.WeatherDataDto;
+import com.itay.weather.accuweatherminer.dto.Location;
+import com.itay.weather.accuweatherminer.dto.WeatherSample;
 import com.itay.weather.accuweatherminer.producer.MinerProducer;
 import com.itay.weather.accuweatherminer.service.MinerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/accu-weather")
@@ -21,15 +25,15 @@ public class MinerController {
     }
 
     @GetMapping
-    public ResponseEntity<Void> fetchData() {
-        System.out.println("Fetching data");
+    public ResponseEntity<WeatherSample> fetchData(@RequestBody Optional<Location> location) {
+        Location loc = new Location("tel-aviv", "israel", 32.109, 34.855);
         try {
-            WeatherDataDto data = minerService.fetchAndSendData();
+            WeatherSample data = minerService.fetchAndSendData(loc);
             minerProducer.sendDataToKafka(data);
+            return ResponseEntity.ok(data);
         } catch (Exception e){
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok().build();
     }
 
 }
