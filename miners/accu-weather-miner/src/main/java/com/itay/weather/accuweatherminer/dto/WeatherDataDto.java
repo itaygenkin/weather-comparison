@@ -2,7 +2,7 @@ package com.itay.weather.accuweatherminer.dto;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Data
 @Builder
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class WeatherDataDto {
     private String source;
     private String location;
-    private LocalDateTime time;
+    private Timestamp time;
     private Double temperature;
     private Double humidity;
 }

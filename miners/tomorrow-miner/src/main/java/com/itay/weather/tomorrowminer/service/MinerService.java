@@ -1,36 +1,45 @@
 package com.itay.weather.tomorrowminer.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itay.weather.tomorrowminer.dto.ApiResponse;
+import com.itay.weather.tomorrowminer.dto.ApiResponseData;
+import com.itay.weather.tomorrowminer.dto.Location;
 import com.itay.weather.tomorrowminer.dto.WeatherDataDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.sql.Timestamp;
+
 @Service
 public class MinerService {
 
     private final RestTemplate restTemplate;
-    private final String apiKey = "";
-    private final String apiUrl = "";
+    @Value("${TOMORROW_WEATHER_API_KEY}")
+    private final String apiKey;
+    @Value("${TOMORROW_WEATHER_API_URL}")
+    private final String apiUrl;
 
     @Autowired
     public MinerService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-//        this.apiKey = System.getProperty("ACCU_WEATHER_API_KEY");
-//        this.apiUrl = System.getProperty("ACCU_WEATHER_API_URL");
+        this.apiKey = System.getProperty("TOMORROW_WEATHER_API_KEY");
+        this.apiUrl = System.getProperty("TOMORROW_WEATHER_API_URL");
     }
 
-    public WeatherDataDto fetchAndSendData() {
-        String json = fetchDataFromApi();
-        return convertJsonToWeatherDataDto(json);
+    public WeatherDataDto fetchAndSendData(Location location) {
+        String json = fetchDataFromApi(location);
+        return convertJsonToWeatherDataDto(json, location);
     }
 
-    private String fetchDataFromApi() {
-        String tomorrowApi = apiUrl + apiKey;
+    private String fetchDataFromApi(Location location) {
+        boolean b = Math.random() < 0.5;  // temporary for development
+        String tomorrowApi = buildUrl(location, b);
         try {
-            // TODO: process response
             ResponseEntity<String> response = restTemplate.getForEntity(
                     tomorrowApi, String.class
             );
@@ -40,9 +49,25 @@ public class MinerService {
         }
     }
 
-    private WeatherDataDto convertJsonToWeatherDataDto(String json) {
-        // TODO: implement
+    private String buildUrl(Location location, boolean locationByDegree){
+        if (locationByDegree)
+            return this.apiUrl + "?" + location.toStringByDegrees() + "&apikey=" + apiKey;
+        return this.apiUrl + "?" + location.toString() + "&apikey=" + apiKey;
+    }
+
+    private WeatherDataDto convertJsonToWeatherDataDto(String json, Location location) {
         ObjectMapper objectMapper = new ObjectMapper();
-        return null;
+        try {
+            ApiResponseData responseData = objectMapper.readValue(json, ApiResponse.class).getData();
+            return WeatherDataDto.builder()
+                    .source("tomorrow-weather")
+                    .time(responseData.getTime())
+                    .location(location)
+                    .temperature(responseData.getValues().getTemperature())
+                    .humidity(responseData.getValues().getHumidity())
+                    .build();
+        } catch (JsonProcessingException e) {
+            return null;
+        }
     }
 }

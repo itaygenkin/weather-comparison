@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Data
 @Entity
@@ -21,7 +21,7 @@ public class WeatherData {
     private long id;
     private String source;
     private String location;
-    private LocalDateTime time;
+    private Timestamp time;
     private Double temperature;
     private Double humidity;
 }
