@@ -1,9 +1,7 @@
 package com.itay.weather.processor.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.itay.weather.processor.dto.Location;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -15,12 +13,13 @@ import java.sql.Timestamp;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WeatherData {
+public class WeatherSampleModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String source;
-    private String location;
+    @Embedded
+    private Location location;
     private Timestamp time;
     private Double temperature;
     private Double humidity;

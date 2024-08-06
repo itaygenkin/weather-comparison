@@ -1,11 +1,9 @@
 package com.itay.weather.backend.controller;
 
-import com.itay.weather.backend.dto.WeatherDataDto;
+import com.itay.weather.backend.dto.WeatherPacket;
 import com.itay.weather.backend.service.BackendService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -18,9 +16,9 @@ public class BackendController {
     }
 
     @GetMapping("/weather-data")
-    public ResponseEntity<List<WeatherDataDto>> getWeatherData() {
-        List<WeatherDataDto> weatherData = backendService.getWeatherData();
-        return ResponseEntity.ok(weatherData);
+    public ResponseEntity<WeatherPacket> getWeatherData() {
+        WeatherPacket weatherPacket = backendService.getWeatherData();
+        return ResponseEntity.ok(weatherPacket);
     }
 
     @PostMapping("/trigger")

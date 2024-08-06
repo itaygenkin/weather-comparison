@@ -1,6 +1,6 @@
 package com.itay.weather.tomorrowminer.producer;
 
-import com.itay.weather.tomorrowminer.dto.WeatherDataDto;
+import com.itay.weather.tomorrowminer.dto.WeatherSample;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -8,15 +8,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class MinerProducer {
 
-    private final KafkaTemplate<String, WeatherDataDto> kafkaTemplate;
+    private final KafkaTemplate<String, WeatherSample> kafkaTemplate;
     @Value("${spring.kafka.producer.topic}")
     private String topic;
 
-    public MinerProducer(final KafkaTemplate<String, WeatherDataDto> kafkaTemplate) {
+    public MinerProducer(final KafkaTemplate<String, WeatherSample> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void sendDataToKafka(WeatherDataDto weatherData) {
+    public void sendDataToKafka(WeatherSample weatherData) {
         kafkaTemplate.send(topic, weatherData);
     }
 

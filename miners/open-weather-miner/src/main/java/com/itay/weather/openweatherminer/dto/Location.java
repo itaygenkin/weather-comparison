@@ -1,4 +1,4 @@
-package com.itay.weather.tomorrowminer.dto;
+package com.itay.weather.openweatherminer.dto;
 
 import lombok.*;
 

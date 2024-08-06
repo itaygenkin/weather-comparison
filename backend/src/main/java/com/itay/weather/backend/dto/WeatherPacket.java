@@ -5,16 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WeatherDataDto {
-    private String source;
-    private String location;
-    private Timestamp time;
-    private Double temperature;
-    private Double humidity;
+public class WeatherPacket {
+    private WeatherList list1;
+    private WeatherList list2;
+    private WeatherList list3;
 }

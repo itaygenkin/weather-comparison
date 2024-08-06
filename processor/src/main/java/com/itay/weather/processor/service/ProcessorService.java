@@ -2,8 +2,11 @@ package com.itay.weather.processor.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itay.weather.processor.dto.WeatherDataDto;
-import com.itay.weather.processor.model.WeatherData;
+import com.itay.weather.processor.dto.Location;
+import com.itay.weather.processor.dto.WeatherList;
+import com.itay.weather.processor.dto.WeatherPacket;
+import com.itay.weather.processor.dto.WeatherSample;
+import com.itay.weather.processor.model.WeatherSampleModel;
 import com.itay.weather.processor.repository.WeatherRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,17 +33,17 @@ public class ProcessorService {
         // process data if needed and then:
         try {
             JsonNode node = new ObjectMapper().readTree(data);
-            WeatherData weatherData = convertWeatherDataDtoToWeatherData(node );
+            WeatherSampleModel weatherData = convertWeatherSampleToWeathersampleModel(node);
             weatherRepository.save(weatherData);
         }
         catch (Exception e){
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
-    private WeatherData convertWeatherDataDtoToWeatherData(JsonNode node){
+    private WeatherSampleModel convertWeatherSampleToWeathersampleModel(JsonNode node){
         // TODO: optimize so as to handle null values
-        return WeatherData.builder()
+        return WeatherSampleModel.builder()
                 .source(node.get("source").asText())
 //                .time(LocalDateTime.parse(node.get("time").asText()))
                 .temperature(node.get("temperature").asDouble())
@@ -48,12 +51,32 @@ public class ProcessorService {
                 .build();
     }
 
-    public List<WeatherDataDto> getAllWeatherData(){
-        return weatherRepository.findAll().stream().map(this::convertWeatherDataToWeatherDataDto).toList();
+    public WeatherPacket getAllWeatherData(Location location){
+        List<WeatherSampleModel> weatherSamples = weatherRepository.findAll();
+        return buildWeatherPacketFromSamples(weatherSamples, location);
     }
 
-    private WeatherDataDto convertWeatherDataToWeatherDataDto(WeatherData weatherData){
-        return WeatherDataDto.builder()
+    private WeatherPacket buildWeatherPacketFromSamples(List<WeatherSampleModel> weatherSamples, Location location){
+        WeatherList accuList = new WeatherList("accu-weather", location);
+        WeatherList openList = new WeatherList("open-weather", location);
+        WeatherList tomorrowList = new WeatherList("tomorrow-weather", location);
+
+        for (WeatherSampleModel weatherSample : weatherSamples){
+            if (!weatherSample.getLocation().equals(location))
+                continue;
+            else if (weatherSample.getSource().equals("accu-weather"))
+                accuList.addSample(convertWeatherSampleModelToWeatherSample(weatherSample));
+            else if (weatherSample.getSource().equals("open-weather"))
+                openList.addSample(convertWeatherSampleModelToWeatherSample(weatherSample));
+            else if (weatherSample.getSource().equals("tomorrow-weather"))
+                tomorrowList.addSample(convertWeatherSampleModelToWeatherSample(weatherSample));
+        }
+
+        return new WeatherPacket(accuList, openList, tomorrowList);
+    }
+
+    private WeatherSample convertWeatherSampleModelToWeatherSample(WeatherSampleModel weatherData){
+        return WeatherSample.builder()
                 .source(weatherData.getSource())
                 .time(weatherData.getTime())
                 .temperature(weatherData.getTemperature())

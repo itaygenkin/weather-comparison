@@ -5,7 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itay.weather.tomorrowminer.dto.ApiResponse;
 import com.itay.weather.tomorrowminer.dto.ApiResponseData;
 import com.itay.weather.tomorrowminer.dto.Location;
-import com.itay.weather.tomorrowminer.dto.WeatherDataDto;
+import com.itay.weather.tomorrowminer.dto.WeatherSample;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.sql.Timestamp;
-
 @Service
+@Slf4j
 public class MinerService {
 
     private final RestTemplate restTemplate;
@@ -31,7 +31,7 @@ public class MinerService {
         this.apiUrl = System.getProperty("TOMORROW_WEATHER_API_URL");
     }
 
-    public WeatherDataDto fetchAndSendData(Location location) {
+    public WeatherSample fetchAndSendData(Location location) {
         String json = fetchDataFromApi(location);
         return convertJsonToWeatherDataDto(json, location);
     }
@@ -40,9 +40,8 @@ public class MinerService {
         boolean b = Math.random() < 0.5;  // temporary for development
         String tomorrowApi = buildUrl(location, b);
         try {
-            ResponseEntity<String> response = restTemplate.getForEntity(
-                    tomorrowApi, String.class
-            );
+            ResponseEntity<String> response = restTemplate.getForEntity(tomorrowApi, String.class);
+            // TODO: check status
             return response.getBody();
         } catch (RestClientException e) {
             return null;
@@ -55,11 +54,11 @@ public class MinerService {
         return this.apiUrl + "?" + location.toString() + "&apikey=" + apiKey;
     }
 
-    private WeatherDataDto convertJsonToWeatherDataDto(String json, Location location) {
+    private WeatherSample convertJsonToWeatherDataDto(String json, Location location) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             ApiResponseData responseData = objectMapper.readValue(json, ApiResponse.class).getData();
-            return WeatherDataDto.builder()
+            return WeatherSample.builder()
                     .source("tomorrow-weather")
                     .time(responseData.getTime())
                     .location(location)

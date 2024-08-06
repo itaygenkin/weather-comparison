@@ -1,4 +1,4 @@
-package com.itay.weather.processor.dto;
+package com.itay.weather.accuweatherminer.dto;
 
 import lombok.*;
 
@@ -10,9 +10,9 @@ import java.sql.Timestamp;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class WeatherDataDto {
+public class WeatherSample {
     private String source;
-    private String location;
+    private Location location;
     private Timestamp time;
     private Double temperature;
     private Double humidity;

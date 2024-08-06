@@ -1,6 +1,5 @@
 package com.itay.weather.tomorrowminer.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
@@ -13,7 +12,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class WeatherDataDto {
+public class WeatherSample {
     private String source;
     private Location location;
     private Timestamp time;

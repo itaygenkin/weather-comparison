@@ -1,13 +1,17 @@
 package com.itay.weather.openweatherminer.controller;
 
-import com.itay.weather.openweatherminer.dto.WeatherDataDto;
+import com.itay.weather.openweatherminer.dto.Location;
+import com.itay.weather.openweatherminer.dto.WeatherSample;
 import com.itay.weather.openweatherminer.producer.MinerProducer;
 import com.itay.weather.openweatherminer.service.MinerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/open-weather")
+@RestController
+@RequestMapping("/open-weather")
 public class MinerController {
 
     private final MinerService minerService;
@@ -19,15 +23,14 @@ public class MinerController {
     }
 
     @GetMapping
-    public ResponseEntity<Void> fetchData() {
-        System.out.println("Fetching data");
+    public ResponseEntity<WeatherSample> fetchData(@RequestBody Location location) {
         try {
-            WeatherDataDto data = minerService.fetchAndSendData();
+            WeatherSample data = minerService.fetchAndSendData(location);
             minerProducer.sendDataToKafka(data);
+            return ResponseEntity.ok(data);
         } catch (Exception e){
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok().build();
     }
 
 }

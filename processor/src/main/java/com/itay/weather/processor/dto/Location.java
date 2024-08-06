@@ -1,4 +1,4 @@
-package com.itay.weather.tomorrowminer.dto;
+package com.itay.weather.processor.dto;
 
 import lombok.*;
 
@@ -20,5 +20,12 @@ public class Location {
 
     public String toString(){
         return String.format("location=%s-%s", city, country);
+    }
+
+    public boolean equals(Location location){
+        if (this.city.equals(location.getCity()) && this.country.equals(location.getCountry()))
+            return true;
+        return Math.abs(this.latitude - location.getLatitude()) < 0.1 &&
+                Math.abs(this.longitude - location.getLongitude()) < 0.1;
     }
 }
