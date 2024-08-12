@@ -21,15 +21,15 @@ public class WeatherList {
     public WeatherList(String source, Location location, List<WeatherSample> samplesList) {
         this.source = source;
         this.location = location;
-        // insert only the samples that have same source and location
-        for (WeatherSample weatherDataDto : samplesList) {
-            if (weatherDataDto.getSource().equals(source) && weatherDataDto.getLocation().equals(location))
-                this.samples.add(weatherDataDto);
-        }
+
+        for (WeatherSample weatherSample : samplesList)
+            // insert only the samples that have same source and location
+            this.addSample(weatherSample);
     }
 
     public void addSample(WeatherSample weatherSample) {
-        if (weatherSample.getSource().equals(source) && weatherSample.getLocation().equals(location))
+        if (weatherSample.getSource().equals(source) &&
+                weatherSample.getLocation().equals(location))
             this.samples.add(weatherSample);
     }
 }

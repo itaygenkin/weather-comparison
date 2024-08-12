@@ -23,11 +23,10 @@ public class WeatherList {
     public WeatherList(String source, Location location, List<WeatherSample> samplesList) {
         this.source = source;
         this.location = location;
-        // insert only the samples that have same source and location
-        for (WeatherSample weatherSample : samplesList) {
-            if (weatherSample.getSource().equals(source) && weatherSample.getLocation().equals(location))
-                this.samples.add(weatherSample);
-        }
+
+        for (WeatherSample weatherSample : samplesList)
+            // insert only the samples that have same source and location
+            this.addSample(weatherSample);
     }
 
     public void addSample(WeatherSample weatherSample) {
