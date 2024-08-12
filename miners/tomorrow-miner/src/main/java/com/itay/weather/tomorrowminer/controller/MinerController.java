@@ -32,8 +32,12 @@ public class MinerController {
         Location loc = new Location("tel-aviv", "israel", 32.109, 34.855);
         try {
             WeatherSample data = minerService.fetchAndSendData(loc);
-//            minerProducer.sendDataToKafka(data);
+            if (data == null)
+                return ResponseEntity.badRequest().build();
+
+            minerProducer.sendDataToKafka(data);
             return ResponseEntity.ok(data);
+
         } catch (Exception e){
             log.error(e.getMessage());
             return ResponseEntity.badRequest().build();

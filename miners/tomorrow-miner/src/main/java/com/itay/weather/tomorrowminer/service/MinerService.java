@@ -33,7 +33,7 @@ public class MinerService {
 
     public WeatherSample fetchAndSendData(Location location) {
         String json = fetchDataFromApi(location);
-        return convertJsonToWeatherDataDto(json, location);
+        return json == null ? null : convertJsonToWeatherDataDto(json, location);
     }
 
     private String fetchDataFromApi(Location location) {
@@ -41,7 +41,9 @@ public class MinerService {
         String tomorrowApi = buildUrl(location, b);
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(tomorrowApi, String.class);
-            // TODO: check status
+            if (!response.getStatusCode().is2xxSuccessful())
+                return null;
+
             return response.getBody();
         } catch (RestClientException e) {
             return null;

@@ -1,5 +1,6 @@
 package com.itay.weather.backend.service;
 
+import com.itay.weather.backend.dto.Location;
 import com.itay.weather.backend.dto.WeatherPacket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -20,16 +21,17 @@ public class BackendService {
         this.restTemplate = restTemplate;
     }
 
-    public WeatherPacket getWeatherData() {
+    public WeatherPacket getWeatherData(Location location) {
         String url = "http://localhost:8081/api/weather";
         try {
             ResponseEntity<WeatherPacket> response = restTemplate.getForEntity(url, WeatherPacket.class);
-//            ResponseEntity<List<WeatherDataDto>> response = restTemplate.exchange(
-//                    url,
-//                    HttpMethod.GET,
-//                    null,
-//                    new ParameterizedTypeReference<List<WeatherDataDto>>() {}
-//            );
+            ResponseEntity<WeatherPacket> res = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<WeatherPacket>() {},
+                    location
+            );
             return response.getBody();
         }
         catch (RestClientException e) {

@@ -1,9 +1,12 @@
 package com.itay.weather.backend.controller;
 
+import com.itay.weather.backend.dto.Location;
 import com.itay.weather.backend.dto.WeatherPacket;
 import com.itay.weather.backend.service.BackendService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -16,8 +19,9 @@ public class BackendController {
     }
 
     @GetMapping("/weather-data")
-    public ResponseEntity<WeatherPacket> getWeatherData() {
-        WeatherPacket weatherPacket = backendService.getWeatherData();
+    public ResponseEntity<WeatherPacket> getWeatherData(@RequestBody Location location) {
+        WeatherPacket weatherPacket = backendService.getWeatherData(location);
+//        WeatherPacket wp = new WeatherPacket();
         return ResponseEntity.ok(weatherPacket);
     }
 

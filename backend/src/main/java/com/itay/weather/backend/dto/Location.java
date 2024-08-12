@@ -11,8 +11,13 @@ import lombok.*;
 public class Location {
     private String city;
     private String country;
-    private double latitude;
-    private double longitude;
+    private double latitude = 0.0;
+    private double longitude = 0.0;
+
+    public Location(String city, String country){
+        this.city = city;
+        this.country = country;
+    }
 
     public String toStringByDegrees(){
         return String.format("location=%f,%f", latitude, longitude);
