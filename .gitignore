@@ -1,0 +1,9 @@
+# Ignore PyCharm settings
+.idea/
+
+# Ignore Python cache files
+__pycache__/
+
+# Ignore environment-specific files (optional)
+.env
+.vscode/
