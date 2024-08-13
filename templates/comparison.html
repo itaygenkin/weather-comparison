@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather Comparison</title>
+</head>
+<body>
+    <h1>Temperature</h1>
+    {{ temperature_plot | safe }}
+    <h2>Humidity</h2>
+    {{ humidity_plot | safe }}
+    <form action="/" method="get">
+        <label>
+            <button onclick="goBack()" type="button">Back</button>
+        </label>
+        <script>
+            function goBack() {
+                window.history.back();
+            }
+        </script>
+    </form>
+</body>
+</html>
