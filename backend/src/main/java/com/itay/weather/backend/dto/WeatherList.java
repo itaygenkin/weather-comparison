@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 @Getter
 @Setter
+@NoArgsConstructor
 public class WeatherList {
     private String source;
     private Location location;

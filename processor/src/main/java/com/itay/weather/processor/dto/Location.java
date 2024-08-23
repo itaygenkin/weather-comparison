@@ -14,6 +14,11 @@ public class Location {
     private double latitude;
     private double longitude;
 
+    public Location(String city, String country){
+        this.city = city;
+        this.country = country;
+    }
+
     public String toStringByDegrees(){
         return String.format("location=%f,%f", latitude, longitude);
     }

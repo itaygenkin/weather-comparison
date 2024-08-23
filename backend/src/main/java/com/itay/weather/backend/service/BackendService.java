@@ -1,11 +1,11 @@
 package com.itay.weather.backend.service;
 
 import com.itay.weather.backend.dto.Location;
+import com.itay.weather.backend.dto.MinerTriggerData;
 import com.itay.weather.backend.dto.WeatherPacket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -14,23 +14,25 @@ import org.springframework.web.client.RestTemplate;
 public class BackendService {
 
     private final RestTemplate restTemplate;
-    private final String[] minerNames = {"accu-weather"/*, "tomorrow", "open-weather"*/};
+    private final MinerTriggerData[] miners;
 
     @Autowired
     public BackendService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
+        miners = new MinerTriggerData[]{
+                new MinerTriggerData("localhost:8091/", "accu-weather"),
+                new MinerTriggerData("localhost:8092/", "tomorrow"),
+                new MinerTriggerData("localhost:8093/", "open-weather")};
     }
 
     public WeatherPacket getWeatherData(Location location) {
-        String url = "http://localhost:8081/api/weather";
+        String url = "http://localhost:8081/api/weather?city={city}&country={country}";
         try {
-            ResponseEntity<WeatherPacket> response = restTemplate.getForEntity(url, WeatherPacket.class);
-            ResponseEntity<WeatherPacket> res = restTemplate.exchange(
+            ResponseEntity<WeatherPacket> response = restTemplate.getForEntity(
                     url,
-                    HttpMethod.GET,
-                    null,
-                    new ParameterizedTypeReference<WeatherPacket>() {},
-                    location
+                    WeatherPacket.class,
+                    location.getCity(),
+                    location.getCountry()
             );
             return response.getBody();
         }
@@ -41,10 +43,10 @@ public class BackendService {
     }
 
     public boolean trigger() {
-        String baseUrl = "http://localhost:8091/";
         try {
-            for (String minerName : minerNames) {
-                restTemplate.exchange(baseUrl + minerName, HttpMethod.POST, null,
+            for (MinerTriggerData miner : miners) {
+                // @TODO: fix post request
+                restTemplate.exchange(miner.getUrl(), HttpMethod.POST, null,
                         new ParameterizedTypeReference<Void>() {});
             }
         }

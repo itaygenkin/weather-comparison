@@ -22,5 +22,5 @@ public class WeatherSampleModel {
     private Location location;
     private Timestamp time;
     private Double temperature;
-    private Double humidity;
+    private Integer humidity;
 }

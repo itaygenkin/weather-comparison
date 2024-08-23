@@ -47,7 +47,7 @@ public class ProcessorService {
                 .source(node.get("source").asText())
 //                .time(LocalDateTime.parse(node.get("time").asText()))
                 .temperature(node.get("temperature").asDouble())
-                .humidity(node.get("humidity").asDouble())
+                .humidity(node.get("humidity").asInt())
                 .build();
     }
 

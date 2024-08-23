@@ -19,9 +19,15 @@ public class BackendController {
     }
 
     @GetMapping("/weather-data")
-    public ResponseEntity<WeatherPacket> getWeatherData(@RequestBody Location location) {
+    public ResponseEntity<WeatherPacket> getWeatherData(
+            @RequestParam String city,
+            @RequestParam String country
+    ) {
+        Location location = new Location(city, country);
         WeatherPacket weatherPacket = backendService.getWeatherData(location);
-//        WeatherPacket wp = new WeatherPacket();
+        if (weatherPacket == null)
+            return ResponseEntity.notFound().build();
+
         return ResponseEntity.ok(weatherPacket);
     }
 

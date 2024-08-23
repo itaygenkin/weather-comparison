@@ -13,5 +13,5 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ApiResponseValues {
     private double temperature;
-    private double humidity;
+    private int humidity;
 }
