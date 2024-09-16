@@ -6,33 +6,27 @@ import com.itay.weather.tomorrowminer.producer.MinerProducer;
 import com.itay.weather.tomorrowminer.service.MinerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/tomorrow")
+@RequestMapping("/miner/tomorrow")
 @Slf4j
 public class MinerController {
 
     private final MinerService minerService;
-    private final MinerProducer minerProducer;
+//    private final MinerProducer minerProducer;
 
-    public MinerController(MinerService minerService, MinerProducer minerProducer) {
+    public MinerController(MinerService minerService/*, MinerProducer minerProducer*/) {
         this.minerService = minerService;
-        this.minerProducer = minerProducer;
+//        this.minerProducer = minerProducer;
     }
 
-    @GetMapping
-    public ResponseEntity<WeatherSample> fetchData(@RequestBody Optional<Location> location) {
+    @PostMapping
+    public ResponseEntity<Void> fetchData(@RequestBody Location location) {
         log.info("Fetching data");
         Location loc = new Location("tel-aviv", "israel", 32.109, 34.855);
         try {
-            WeatherSample data = minerService.fetchAndSendData(loc);
-            if (data == null)
+            if (!minerService.fetchAndSendData(location))
                 return ResponseEntity.badRequest().build();
 
             minerProducer.sendDataToKafka(data);
@@ -42,6 +36,7 @@ public class MinerController {
             log.error(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
+        return ResponseEntity.ok().build();
     }
 
 }

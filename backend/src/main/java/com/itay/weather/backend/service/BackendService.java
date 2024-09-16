@@ -1,5 +1,7 @@
 package com.itay.weather.backend.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itay.weather.backend.dto.Location;
 import com.itay.weather.backend.dto.MinerTriggerData;
 import com.itay.weather.backend.dto.WeatherPacket;
@@ -9,6 +11,9 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class BackendService {
@@ -42,15 +47,37 @@ public class BackendService {
         }
     }
 
-    public boolean trigger() {
+    public boolean trigger(Location location) {
         try {
             for (MinerTriggerData miner : miners) {
-                // @TODO: fix post request
-                restTemplate.exchange(miner.getUrl(), HttpMethod.POST, null,
-                        new ParameterizedTypeReference<Void>() {});
+                // creating url
+                String url = "http://" + miner.getUrl() + "/miner/" + miner.getMinerName();
+
+                // creating headers
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_JSON);
+
+                // creating body to the post request
+                Map<String, String> bodyParams = new HashMap<>();
+                bodyParams.put("city", location.getCity());
+                bodyParams.put("country", location.getCountry());
+
+                // creating request entity
+                String reqBodyData = new ObjectMapper().writeValueAsString(bodyParams);
+                HttpEntity<String> requestEntity = new HttpEntity<>(reqBodyData, headers);
+
+                ResponseEntity<Void> response = restTemplate.postForEntity(
+                        url,
+                        requestEntity,
+                        Void.class
+                );
+                System.out.println("response: " + response);
+                return response.getStatusCode() == HttpStatus.OK;
             }
         }
-        catch (RestClientException e){
+        catch (RestClientException | JsonProcessingException e){
+            System.out.println("got an error:   " + e.getMessage());
+
             return false;
         }
         return true;

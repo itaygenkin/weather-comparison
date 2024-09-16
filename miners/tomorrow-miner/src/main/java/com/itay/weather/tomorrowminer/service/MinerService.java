@@ -6,6 +6,7 @@ import com.itay.weather.tomorrowminer.dto.ApiResponse;
 import com.itay.weather.tomorrowminer.dto.ApiResponseData;
 import com.itay.weather.tomorrowminer.dto.Location;
 import com.itay.weather.tomorrowminer.dto.WeatherSample;
+import com.itay.weather.tomorrowminer.producer.MinerProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,21 +20,25 @@ import org.springframework.web.client.RestTemplate;
 public class MinerService {
 
     private final RestTemplate restTemplate;
+    private final MinerProducer minerProducer;
     @Value("${TOMORROW_WEATHER_API_KEY}")
     private final String apiKey;
     @Value("${TOMORROW_WEATHER_API_URL}")
     private final String apiUrl;
 
     @Autowired
-    public MinerService(RestTemplate restTemplate) {
+    public MinerService(RestTemplate restTemplate, MinerProducer minerProducer) {
         this.restTemplate = restTemplate;
+        this.minerProducer = minerProducer;
         this.apiKey = System.getProperty("TOMORROW_WEATHER_API_KEY");
         this.apiUrl = System.getProperty("TOMORROW_WEATHER_API_URL");
     }
 
-    public WeatherSample fetchAndSendData(Location location) {
+    public boolean fetchAndSendData(Location location) {
         String json = fetchDataFromApi(location);
-        return json == null ? null : convertJsonToWeatherDataDto(json, location);
+        if (json == null)
+            return false;
+        return minerProducer.sendDataToKafka(convertJsonToWeatherSample(json, location));
     }
 
     private String fetchDataFromApi(Location location) {
@@ -41,11 +46,13 @@ public class MinerService {
         String tomorrowApi = buildUrl(location, b);
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(tomorrowApi, String.class);
-            if (!response.getStatusCode().is2xxSuccessful())
+            if (!response.getStatusCode().is2xxSuccessful()) {
+                log.info("failed to request weather data from tomorrow api");
                 return null;
-
+            }
             return response.getBody();
         } catch (RestClientException e) {
+            log.warn(e.getMessage());
             return null;
         }
     }
@@ -56,7 +63,7 @@ public class MinerService {
         return this.apiUrl + "?" + location.toString() + "&apikey=" + apiKey;
     }
 
-    private WeatherSample convertJsonToWeatherDataDto(String json, Location location) {
+    private WeatherSample convertJsonToWeatherSample(String json, Location location) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             ApiResponseData responseData = objectMapper.readValue(json, ApiResponse.class).getData();
@@ -68,6 +75,7 @@ public class MinerService {
                     .humidity(responseData.getValues().getHumidity())
                     .build();
         } catch (JsonProcessingException e) {
+            log.warn(e.getMessage());
             return null;
         }
     }

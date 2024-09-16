@@ -1,6 +1,7 @@
 package com.itay.weather.processor.model;
 
 import com.itay.weather.processor.dto.Location;
+import com.itay.weather.processor.dto.WeatherSample;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,4 +24,12 @@ public class WeatherSampleModel {
     private Timestamp time;
     private Double temperature;
     private Integer humidity;
+
+    public WeatherSampleModel(WeatherSample weatherSample){
+        this.source = weatherSample.getSource();
+        this.location = weatherSample.getLocation();
+        this.time = weatherSample.getTime();
+        this.temperature = weatherSample.getTemperature();
+        this.humidity = weatherSample.getHumidity();
+    }
 }

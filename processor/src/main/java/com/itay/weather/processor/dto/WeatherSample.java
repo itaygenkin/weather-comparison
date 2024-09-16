@@ -1,5 +1,6 @@
 package com.itay.weather.processor.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -10,6 +11,7 @@ import java.sql.Timestamp;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class WeatherSample {
     private String source;
     private Location location;

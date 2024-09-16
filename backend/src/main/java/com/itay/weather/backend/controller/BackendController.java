@@ -32,8 +32,8 @@ public class BackendController {
     }
 
     @PostMapping("/trigger")
-    public ResponseEntity<Void> triggerMiners(){
-        if (backendService.trigger())
+    public ResponseEntity<Void> triggerMiners(@RequestBody Location location){
+        if (backendService.trigger(location))
             return ResponseEntity.ok().build();
         return ResponseEntity.badRequest().build();
     }
