@@ -21,4 +21,11 @@ public class Location {
     public String toString(){
         return String.format("location=%s-%s", city, country);
     }
+
+    public boolean equals(com.itay.weather.processor.dto.Location location){
+        if (this.city.equals(location.getCity()) && this.country.equals(location.getCountry()))
+            return true;
+        return Math.abs(this.latitude - location.getLatitude()) < 0.1 &&
+                Math.abs(this.longitude - location.getLongitude()) < 0.1;
+    }
 }
