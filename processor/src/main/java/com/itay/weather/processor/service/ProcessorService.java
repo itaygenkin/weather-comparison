@@ -9,18 +9,17 @@ import com.itay.weather.processor.dto.WeatherSample;
 import com.itay.weather.processor.model.WeatherSampleModel;
 import com.itay.weather.processor.repository.WeatherRepository;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 
 @Service
+@Slf4j
 public class ProcessorService {
 
     private final WeatherRepository weatherRepository;
@@ -39,7 +38,7 @@ public class ProcessorService {
             weatherRepository.save(weatherData);
         }
         catch (Exception e){
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
@@ -61,6 +60,11 @@ public class ProcessorService {
                 .temperature(node.get("temperature").asDouble())
                 .humidity(node.get("humidity").asInt())
                 .build();
+    }
+
+    public WeatherPacket getWeatherDataByLocation(Location location){
+        List<WeatherSampleModel> weatherSamples = weatherRepository.findAllByLocation(location);
+        return buildWeatherPacketFromSamples(weatherSamples, location);
     }
 
     public WeatherPacket getAllWeatherData(Location location){

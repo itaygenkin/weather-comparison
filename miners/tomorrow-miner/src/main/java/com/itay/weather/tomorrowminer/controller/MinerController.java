@@ -1,8 +1,6 @@
 package com.itay.weather.tomorrowminer.controller;
 
 import com.itay.weather.tomorrowminer.dto.Location;
-import com.itay.weather.tomorrowminer.dto.WeatherSample;
-import com.itay.weather.tomorrowminer.producer.MinerProducer;
 import com.itay.weather.tomorrowminer.service.MinerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -23,15 +21,10 @@ public class MinerController {
 
     @PostMapping
     public ResponseEntity<Void> fetchData(@RequestBody Location location) {
-        log.info("Fetching data");
-        Location loc = new Location("tel-aviv", "israel", 32.109, 34.855);
+        log.info("fetching data from location '{}'", location);
         try {
             if (!minerService.fetchAndSendData(location))
                 return ResponseEntity.badRequest().build();
-
-            minerProducer.sendDataToKafka(data);
-            return ResponseEntity.ok(data);
-
         } catch (Exception e){
             log.error(e.getMessage());
             return ResponseEntity.badRequest().build();

@@ -50,7 +50,7 @@ public class MinerService {
                 log.info("failed to request weather data from tomorrow api");
                 return null;
             }
-            log.info("Got response from tomorrow api with status code: {}", response.getStatusCode());
+            log.info("response status: {}", response.getStatusCode());
             return response.getBody();
         } catch (RestClientException e) {
             log.warn(e.getMessage());

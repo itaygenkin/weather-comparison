@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itay.weather.backend.dto.Location;
 import com.itay.weather.backend.dto.MinerTriggerData;
 import com.itay.weather.backend.dto.WeatherPacket;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class BackendService {
 
     private final RestTemplate restTemplate;
@@ -39,10 +40,11 @@ public class BackendService {
                     location.getCity(),
                     location.getCountry()
             );
+            log.info("response status: {}", response.getStatusCode());
             return response.getBody();
         }
         catch (RestClientException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
             return null;
         }
     }
@@ -71,13 +73,12 @@ public class BackendService {
                         requestEntity,
                         Void.class
                 );
-                System.out.println("response: " + response);
+                log.info("response status: {}", response.getStatusCode());
                 return response.getStatusCode() == HttpStatus.OK;
             }
         }
         catch (RestClientException | JsonProcessingException e){
-            System.out.println("got an error:   " + e.getMessage());
-
+            log.error(e.getMessage());
             return false;
         }
         return true;

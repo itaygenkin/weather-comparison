@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 
 @RestController
 @RequestMapping("/api")
+@Slf4j
 public class ProcessorController {
 
     private final ProcessorService processorService;
@@ -26,8 +27,11 @@ public class ProcessorController {
             @RequestParam(value = "city") String city,
             @RequestParam(value = "country") String country
     ){
+        log.info("function call: 'getWeatherData'");
+        log.info("params: city({}), country({})", city, country);
+
         Location location = new Location(city, country);
-        WeatherPacket data = processorService.getAllWeatherData(location);
+        WeatherPacket data = processorService.getWeatherDataByLocation(location);
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 

@@ -3,6 +3,7 @@ package com.itay.weather.backend.controller;
 import com.itay.weather.backend.dto.Location;
 import com.itay.weather.backend.dto.WeatherPacket;
 import com.itay.weather.backend.service.BackendService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,6 +11,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
+@Slf4j
 public class BackendController {
 
     private final BackendService backendService;
@@ -23,6 +25,8 @@ public class BackendController {
             @RequestParam String city,
             @RequestParam String country
     ) {
+        log.info("GET request: city_param: '{}', country_param: '{}'", city, country);
+
         Location location = new Location(city, country);
         WeatherPacket weatherPacket = backendService.getWeatherData(location);
         if (weatherPacket == null)
@@ -33,6 +37,7 @@ public class BackendController {
 
     @PostMapping("/trigger")
     public ResponseEntity<Void> triggerMiners(@RequestBody Location location){
+        log.info("GET request: location_param: '{}'", location);
         if (backendService.trigger(location))
             return ResponseEntity.ok().build();
         return ResponseEntity.badRequest().build();
