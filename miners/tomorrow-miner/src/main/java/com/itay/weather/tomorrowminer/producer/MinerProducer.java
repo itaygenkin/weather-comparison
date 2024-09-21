@@ -19,8 +19,7 @@ public class MinerProducer {
     }
 
     public boolean sendDataToKafka(WeatherSample weatherSample) {
-        log.info("Sending data to topic {};", topic);
-        System.out.println(weatherSample);
+        log.info("Sending data to topic '{}';", topic);
         try {
             kafkaTemplate.send(topic, weatherSample);
         } catch (Exception e) {
