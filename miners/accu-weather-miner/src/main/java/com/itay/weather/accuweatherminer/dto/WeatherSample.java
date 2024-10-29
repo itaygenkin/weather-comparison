@@ -16,4 +16,8 @@ public class WeatherSample {
     private Timestamp time;
     private Double temperature;
     private Integer humidity;
+
+    public boolean isInTime(Timestamp start, Timestamp end) {
+        return time.compareTo(start) >= 0 && time.compareTo(end) <= 0;
+    }
 }
