@@ -1,13 +1,15 @@
 package com.itay.weather.backend.controller;
 
-import com.itay.weather.backend.dto.Location;
-import com.itay.weather.backend.dto.WeatherPacket;
+import dto.Location;
+import dto.WeatherList;
+import dto.WeatherPacket;
+import dto.WeatherSample;
 import com.itay.weather.backend.service.BackendService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.sql.Timestamp;
 
 @RestController
 @RequestMapping("/api")

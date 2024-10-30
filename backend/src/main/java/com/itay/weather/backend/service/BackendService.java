@@ -2,9 +2,9 @@ package com.itay.weather.backend.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itay.weather.backend.dto.Location;
-import com.itay.weather.backend.dto.MinerTriggerData;
-import com.itay.weather.backend.dto.WeatherPacket;
+import dto.Location;
+import dto.MinerData;
+import dto.WeatherPacket;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -20,15 +20,15 @@ import java.util.Map;
 public class BackendService {
 
     private final RestTemplate restTemplate;
-    private final MinerTriggerData[] miners;
+    private final MinerData[] miners;
 
     @Autowired
     public BackendService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-        miners = new MinerTriggerData[]{
-                new MinerTriggerData("localhost:8091/", "accu-weather"),
-                new MinerTriggerData("localhost:8092/", "tomorrow"),
-                new MinerTriggerData("localhost:8093/", "open-weather")};
+        miners = new MinerData[]{
+//                new MinerTriggerData("localhost:8091", "accu-weather"),
+//                new MinerTriggerData("localhost:8092", "open-weather"),
+                new MinerData("localhost:8093", "tomorrow")};
     }
 
     public WeatherPacket getWeatherData(Location location) {
@@ -51,7 +51,7 @@ public class BackendService {
 
     public boolean trigger(Location location) {
         try {
-            for (MinerTriggerData miner : miners) {
+            for (MinerData miner : miners) {
                 // creating url
                 String url = "http://" + miner.getUrl() + "/miner/" + miner.getMinerName();
 

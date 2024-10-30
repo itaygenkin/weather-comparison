@@ -22,6 +22,7 @@
         <module>miners/tomorrow-miner</module>
         <module>miners/accu-weather-miner</module>
         <module>miners/open-weather-miner</module>
+        <module>weather_objects</module>
     </modules>
 
     <properties>
