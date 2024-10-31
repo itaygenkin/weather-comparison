@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class MinerTriggerData {
+public class TriggerMinerData {
     private String url;
     private String minerName;
 }
