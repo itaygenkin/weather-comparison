@@ -4,6 +4,7 @@ services:
     container_name: zookeeper
     ports:
       - "2181:2181"
+
   kafka:
     image: wurstmeister/kafka:2.13-2.7.0
     ports:
@@ -14,6 +15,7 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     depends_on:
       - zookeeper
+
   mysql:
     image: mysql:8.4
     ports:
@@ -25,6 +27,43 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - mysql-data:/var/lib/mysql
+
+  miner:
+    build:
+      context: ./miner
+    ports:
+      - "8082:8082"
+    depends_on:
+      - kafka
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - miner
+
+  processor:
+    build:
+      context: ./processor
+    depends_on:
+      - kafka
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/weather_aggregator_db
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - "8081:8081"
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
 
 volumes:
   mysql-data:
