@@ -26,9 +26,9 @@ public class BackendService {
     public BackendService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
         miners = new MinerData[]{
-//                new MinerTriggerData("localhost:8091", "accu-weather"),
-//                new MinerTriggerData("localhost:8092", "open-weather"),
-                new MinerData("localhost:8093", "tomorrow")};
+//                new MinerTriggerData("localhost:8082", "accu-weather"),
+//                new MinerTriggerData("localhost:8082", "open-weather"),
+                new MinerData("localhost:8082", "tomorrow")};
     }
 
     public WeatherPacket getWeatherData(Location location) {
@@ -50,24 +50,11 @@ public class BackendService {
     }
 
     public boolean trigger(Location location) {
+        String url = "http://localhost:8082/miner/fetch";
         try {
             for (MinerData miner : miners) {
                 // creating url
-                String url = "http://" + miner.getUrl() + "/miner/" + miner.getMinerName();
-
-                // creating headers
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.APPLICATION_JSON);
-
-                // creating body to the post request
-                Map<String, String> bodyParams = new HashMap<>();
-                bodyParams.put("city", location.getCity());
-                bodyParams.put("country", location.getCountry());
-
-                // creating request entity
-                String reqBodyData = new ObjectMapper().writeValueAsString(bodyParams);
-                HttpEntity<String> requestEntity = new HttpEntity<>(reqBodyData, headers);
-
+                HttpEntity<String> requestEntity = createHttpEntity(location);
                 ResponseEntity<Void> response = restTemplate.postForEntity(
                         url,
                         requestEntity,
@@ -82,5 +69,20 @@ public class BackendService {
             return false;
         }
         return true;
+    }
+
+    private static HttpEntity<String> createHttpEntity(Location location) throws JsonProcessingException {
+        // creating headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // creating body to the post request
+        Map<String, String> bodyParams = new HashMap<>();
+        bodyParams.put("city", location.getCity());
+        bodyParams.put("country", location.getCountry());
+
+        // creating request entity
+        String reqBodyData = new ObjectMapper().writeValueAsString(bodyParams);
+        return new HttpEntity<>(reqBodyData, headers);
     }
 }

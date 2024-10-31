@@ -45,11 +45,6 @@
 <!--            <scope>test</scope>-->
 <!--        </dependency>-->
         <dependency>
-            <groupId>com.itay.weather</groupId>
-            <artifactId>processor</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>io.github.cdimascio</groupId>
             <artifactId>dotenv-java</artifactId>
             <version>2.2.0</version>

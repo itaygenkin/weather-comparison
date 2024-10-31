@@ -42,8 +42,7 @@ public class MinerService {
     }
 
     private String fetchDataFromApi(Location location) {
-        boolean b = Math.random() < 0.5;  // temporary for development
-        String tomorrowApi = buildUrl(location, b);
+        String tomorrowApi = buildUrl(location);
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(tomorrowApi, String.class);
             if (!response.getStatusCode().is2xxSuccessful()) {
@@ -58,9 +57,7 @@ public class MinerService {
         }
     }
 
-    private String buildUrl(Location location, boolean locationByDegree){
-        if (locationByDegree)
-            return this.apiUrl + "?" + location.toStringByDegrees() + "&apikey=" + apiKey;
+    private String buildUrl(Location location){
         return this.apiUrl + "?" + location.toString() + "&apikey=" + apiKey;
     }
 
@@ -68,6 +65,7 @@ public class MinerService {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             ApiResponseData responseData = objectMapper.readValue(json, ApiResponse.class).getData();
+
             return WeatherSample.builder()
                     .source("tomorrow-weather")
                     .time(responseData.getTime())
@@ -80,4 +78,5 @@ public class MinerService {
             return null;
         }
     }
+
 }

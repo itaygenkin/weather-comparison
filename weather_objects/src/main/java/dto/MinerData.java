@@ -12,4 +12,6 @@ import lombok.Setter;
 public class MinerData {
     private String url;
     private String minerName;
+
+    // TODO: check if class is necessary
 }
