@@ -23,12 +23,7 @@ public class MinerController {
     @PostMapping("/fetch")
     public ResponseEntity<Void> fetchData(@RequestBody Location location) {
         log.info("fetching data from location '{}'", location);
-        try {
-            minerService.fetchAndSendData(location);
-        } catch (Exception e){
-            log.error(e.getMessage());
-            return ResponseEntity.badRequest().build();
-        }
+        minerService.fetchAndSendData(location);
         return ResponseEntity.ok().build();
     }
 
