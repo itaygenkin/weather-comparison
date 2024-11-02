@@ -1,10 +1,13 @@
 package dto;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.HashMap;
 
 @Data
+@AllArgsConstructor
 public abstract class AbstractMiner {
     protected final String minerName;
     protected final String baseUrl;
@@ -18,5 +21,5 @@ public abstract class AbstractMiner {
         return url.substring(0, url.length() - 1);
     }
 
-    public abstract WeatherSample processResponse(String response);
+    public abstract WeatherSample processResponse(String response, Location location) throws JsonProcessingException;
 }
