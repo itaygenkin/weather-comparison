@@ -6,9 +6,9 @@ import java.util.HashMap;
 
 @Data
 public abstract class AbstractMiner {
-    private final String minerName;
-    private final String baseUrl;
-    private final String apiKey;
+    protected final String minerName;
+    protected final String baseUrl;
+    protected final String apiKey;
 
     public String buildUrl(HashMap<String, String> params) {
         StringBuilder url = new StringBuilder(baseUrl);
