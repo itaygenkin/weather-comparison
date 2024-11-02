@@ -1,5 +1,8 @@
 package com.itay.weather.miner.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.itay.weather.miner.component.MinerList;
+import com.itay.weather.miner.objects.MinerValues;
 import com.itay.weather.miner.producer.MinerProducer;
 import dto.AbstractMiner;
 import dto.Location;
@@ -10,42 +13,37 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 @Slf4j
 @Service
 public class MinerService {
 
     private final RestTemplate restTemplate;
     private final MinerProducer minerProducer;
-    private final List<AbstractMiner> miners = new ArrayList<>();
+    private final MinerList miners;
 
     @Autowired
-    public MinerService(RestTemplate restTemplate, MinerProducer minerProducer) {
+    public MinerService(RestTemplate restTemplate, MinerProducer minerProducer, MinerValues values) {
         this.restTemplate = restTemplate;
         this.minerProducer = minerProducer;
-        // TODO: initialize miners
+        this.miners = new MinerList(values);
     }
 
-
-    // TODO: throw exception when needed
-    // TODO: use threads for concurrency
+    // TODO: use threads for concurrency or timeout
     public void fetchAndSendData(Location location) {
-        for (AbstractMiner miner : miners) {
+        for (AbstractMiner miner : miners.getMiners()) {
             String json = fetchDataFromApi(miner, location);
             if (json != null)
                 continue;
-            minerProducer.sendDataToKafka(miner.processResponse(json));
+            try {
+                minerProducer.sendDataToKafka(miner.processResponse(json, location));
+            } catch (JsonProcessingException e) {
+                log.error(e.getMessage(), e);
+            }
         }
     }
 
     private String fetchDataFromApi(AbstractMiner miner, Location location) {
-        HashMap<String, String> params = new HashMap<>();
-        params.put("city", location.getCity());
-        params.put("country", location.getCountry());
-        String url = miner.buildUrl(params);
+        String url = miner.buildUrl(location.toHashMap());
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
             if (!response.getStatusCode().is2xxSuccessful()){

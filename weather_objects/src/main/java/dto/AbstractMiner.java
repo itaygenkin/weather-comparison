@@ -3,10 +3,14 @@ package dto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashMap;
 
 @Data
+@Getter
+@Setter
 @AllArgsConstructor
 public abstract class AbstractMiner {
     protected final String minerName;

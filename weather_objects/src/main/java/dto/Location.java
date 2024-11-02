@@ -1,6 +1,8 @@
 package dto;
 import lombok.*;
 
+import java.util.HashMap;
+
 @Data
 @Builder
 @Getter
@@ -31,5 +33,12 @@ public class Location {
             return true;
         return Math.abs(this.latitude - location.getLatitude()) < 0.1 &&
                 Math.abs(this.longitude - location.getLongitude()) < 0.1;
+    }
+
+    public HashMap<String, String> toHashMap(){
+        HashMap<String, String> map = new HashMap<>();
+        map.put("city", this.city);
+        map.put("country", this.country);
+        return map;
     }
 }
