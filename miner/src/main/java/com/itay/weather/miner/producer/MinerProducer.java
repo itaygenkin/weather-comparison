@@ -1,6 +1,6 @@
 package com.itay.weather.miner.producer;
 
-import dto.WeatherSample;
+import com.itay.weather.dto.WeatherSample;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;

@@ -2,10 +2,10 @@ package com.itay.weather.processor.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dto.Location;
-import dto.WeatherList;
-import dto.WeatherPacket;
-import dto.WeatherSample;
+import com.itay.weather.dto.Location;
+import com.itay.weather.dto.WeatherList;
+import com.itay.weather.dto.WeatherPacket;
+import com.itay.weather.dto.WeatherSample;
 import com.itay.weather.processor.model.WeatherSampleModel;
 import com.itay.weather.processor.repository.WeatherRepository;
 

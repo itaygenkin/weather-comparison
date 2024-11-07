@@ -1,7 +1,7 @@
 package com.itay.weather.processor.model;
 
-import dto.Location;
-import dto.WeatherSample;
+import com.itay.weather.dto.Location;
+import com.itay.weather.dto.WeatherSample;
 import jakarta.persistence.*;
 import lombok.*;
 

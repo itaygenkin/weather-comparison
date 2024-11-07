@@ -1,10 +1,10 @@
 package com.itay.weather.processor.controller;
 
 import com.itay.weather.processor.service.ProcessorService;
-import dto.Location;
-import dto.WeatherSample;
-import dto.WeatherList;
-import dto.WeatherPacket;
+import com.itay.weather.dto.Location;
+import com.itay.weather.dto.WeatherSample;
+import com.itay.weather.dto.WeatherList;
+import com.itay.weather.dto.WeatherPacket;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

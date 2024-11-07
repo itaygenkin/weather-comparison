@@ -1,4 +1,4 @@
-package dto;
+package com.itay.weather.dto;
 
 import lombok.Data;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package dto;
+package com.itay.weather.dto;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;

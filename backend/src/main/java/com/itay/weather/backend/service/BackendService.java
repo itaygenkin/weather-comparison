@@ -2,9 +2,9 @@ package com.itay.weather.backend.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dto.Location;
-import dto.MinerData;
-import dto.WeatherPacket;
+import com.itay.weather.dto.Location;
+import com.itay.weather.dto.MinerData;
+import com.itay.weather.dto.WeatherPacket;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;

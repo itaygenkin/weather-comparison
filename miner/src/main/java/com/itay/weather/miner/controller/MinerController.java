@@ -1,7 +1,7 @@
 package com.itay.weather.miner.controller;
 
 import com.itay.weather.miner.service.MinerService;
-import dto.Location;
+import com.itay.weather.dto.Location;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

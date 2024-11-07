@@ -1,9 +1,9 @@
 package com.itay.weather.backend.controller;
 
-import dto.Location;
-import dto.WeatherList;
-import dto.WeatherPacket;
-import dto.WeatherSample;
+import com.itay.weather.dto.Location;
+import com.itay.weather.dto.WeatherList;
+import com.itay.weather.dto.WeatherPacket;
+import com.itay.weather.dto.WeatherSample;
 import com.itay.weather.backend.service.BackendService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

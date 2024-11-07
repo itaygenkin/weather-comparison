@@ -2,10 +2,9 @@ package com.itay.weather.miner.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.itay.weather.miner.component.MinerList;
-import com.itay.weather.miner.objects.MinerValues;
 import com.itay.weather.miner.producer.MinerProducer;
-import dto.AbstractMiner;
-import dto.Location;
+import com.itay.weather.dto.AbstractMiner;
+import com.itay.weather.dto.Location;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +21,10 @@ public class MinerService {
     private final MinerList miners;
 
     @Autowired
-    public MinerService(RestTemplate restTemplate, MinerProducer minerProducer, MinerValues values) {
+    public MinerService(RestTemplate restTemplate, MinerProducer minerProducer, MinerList miners) {
         this.restTemplate = restTemplate;
         this.minerProducer = minerProducer;
-        this.miners = new MinerList(values);
+        this.miners = miners;
     }
 
     // TODO: use threads for concurrency or timeout
@@ -50,7 +49,7 @@ public class MinerService {
                 log.info("failed to request weather data from tomorrow api");
                 return null;
             }
-            log.info("repsonse status: {}", response.getStatusCode());
+            log.info("response status: {}", response.getStatusCode());
             return response.getBody();
         } catch (RestClientException e) {
             log.warn(e.getMessage());

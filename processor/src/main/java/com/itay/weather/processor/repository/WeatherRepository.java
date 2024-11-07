@@ -1,6 +1,6 @@
 package com.itay.weather.processor.repository;
 
-import dto.Location;
+import com.itay.weather.dto.Location;
 import com.itay.weather.processor.model.WeatherSampleModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 

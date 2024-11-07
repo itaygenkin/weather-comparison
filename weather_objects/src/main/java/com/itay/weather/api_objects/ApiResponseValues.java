@@ -1,4 +1,4 @@
-package api_objects;
+package com.itay.weather.api_objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ApiResponse {
-    private ApiResponseData data;
+public class ApiResponseValues {
+    private double temperature;
+    private int humidity;
 }
