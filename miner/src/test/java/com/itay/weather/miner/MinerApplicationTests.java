@@ -1,10 +1,10 @@
-package com.itay.weather.tomorrowminer;
+package com.itay.weather.miner;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TomorrowMinerApplicationTests {
+class MinerApplicationTests {
 
     @Test
     void contextLoads() {

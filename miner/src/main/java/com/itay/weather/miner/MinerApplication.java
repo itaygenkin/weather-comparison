@@ -1,15 +1,17 @@
-package com.itay.weather.tomorrowminer;
+package com.itay.weather.miner;
 
+import com.itay.weather.miner.component.MinerList;
+import com.itay.weather.miner.objects.MinerValues;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
-public class TomorrowMinerApplication {
+public class MinerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(TomorrowMinerApplication.class, args);
+        SpringApplication.run(MinerApplication.class, args);
     }
 
     @Bean
@@ -17,4 +19,8 @@ public class TomorrowMinerApplication {
         return new RestTemplate();
     }
 
+    @Bean
+    public MinerList minerList() {
+        return new MinerList(MinerValues.getInstance());
+    }
 }
