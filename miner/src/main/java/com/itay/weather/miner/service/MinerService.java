@@ -31,7 +31,7 @@ public class MinerService {
     public void fetchAndSendData(Location location) {
         for (AbstractMiner miner : miners.getMiners()) {
             String json = fetchDataFromApi(miner, location);
-            if (json != null)
+            if (json == null)
                 continue;
             try {
                 minerProducer.sendDataToKafka(miner.processResponse(json, location));
@@ -51,7 +51,7 @@ public class MinerService {
             }
             log.info("response status: {}", response.getStatusCode());
             return response.getBody();
-        } catch (RestClientException e) {
+        } catch (RestClientException | IllegalArgumentException e ) {
             log.warn(e.getMessage());
             return null;
         }

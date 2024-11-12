@@ -1,5 +1,6 @@
 package com.itay.weather.miner.objects;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -7,26 +8,21 @@ import org.springframework.beans.factory.annotation.Value;
 public class MinerValues {
     private static volatile MinerValues instance = null;
 
-    @Value("${TOMORROW_WEATHER_API_KEY}")
     private final String tomorrowApiKey;
-    @Value("${TOMORROW_WEATHER_API_URL}")
     private final String tomorrowApiUrl;
-    @Value("${OPEN_WEATHER_API_KEY}")
     private final String openWeatherApiKey;
-    @Value("${OPEN_WEATHER_API_URL}")
     private final String openWeatherApiUrl;
-    @Value("${ACCU_WEATHER_API_KEY}")
     private final String accuWeatherApiKey;
-    @Value("${ACCU_WEATHER_API_URL}")
     private final String accuWeatherApiUrl;
 
     private MinerValues() {
-        this.tomorrowApiKey = System.getProperty("TOMORROW_WEATHER_API_KEY");
-        this.tomorrowApiUrl = System.getProperty("TOMORROW_WEATHER_API_URL");
-        this.openWeatherApiKey = System.getProperty("OPEN_WEATHER_API_KEY");
-        this.openWeatherApiUrl = System.getProperty("OPEN_WEATHER_API_URL");
-        this.accuWeatherApiKey = System.getProperty("ACCU_WEATHER_API_KEY");
-        this.accuWeatherApiUrl = System.getProperty("ACCU_WEATHER_API_URL");
+        Dotenv dotenv = Dotenv.load();
+        this.tomorrowApiKey = dotenv.get("TOMORROW_WEATHER_API_KEY");
+        this.tomorrowApiUrl = dotenv.get("TOMORROW_WEATHER_API_URL");
+        this.openWeatherApiKey = dotenv.get("OPEN_WEATHER_API_KEY");
+        this.openWeatherApiUrl = dotenv.get("OPEN_WEATHER_API_URL");
+        this.accuWeatherApiKey = dotenv.get("ACCU_WEATHER_API_KEY");
+        this.accuWeatherApiUrl = dotenv.get("ACCU_WEATHER_API_URL");
     }
 
     public static MinerValues getInstance() {

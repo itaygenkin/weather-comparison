@@ -1,6 +1,6 @@
 package com.itay.weather.processor.model;
 
-import com.itay.weather.processor.dto.Location;
+import com.itay.weather.dto.Location;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 

@@ -19,6 +19,7 @@ public abstract class AbstractMiner {
 
     public String buildUrl(HashMap<String, String> params) {
         StringBuilder url = new StringBuilder(baseUrl);
+        params.put("apikey", apiKey);
         url.append("?");
         for (String key : params.keySet())
             url.append(key).append("=").append(params.get(key)).append("&");

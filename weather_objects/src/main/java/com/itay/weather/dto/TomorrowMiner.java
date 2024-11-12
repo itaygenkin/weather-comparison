@@ -1,7 +1,7 @@
-package dto;
+package com.itay.weather.dto;
 
-import api_objects.ApiResponse;
-import api_objects.ApiResponseData;
+import com.itay.weather.api_objects.ApiResponse;
+import com.itay.weather.api_objects.ApiResponseData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

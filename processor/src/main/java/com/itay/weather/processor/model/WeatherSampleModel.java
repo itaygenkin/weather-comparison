@@ -36,4 +36,14 @@ public class WeatherSampleModel {
     public boolean isInTime(Timestamp start, Timestamp end) {
         return time.compareTo(start) >= 0 && time.compareTo(end) <= 0;
     }
+
+    public WeatherSample toWeatherSample(){
+        return WeatherSample.builder()
+                .source(source)
+                .time(time)
+                .location(location)
+                .temperature(temperature)
+                .humidity(humidity)
+                .build();
+    }
 }

@@ -31,10 +31,11 @@ public class ProcessorService {
 
     @KafkaListener(topics = "weather-data")
     public void handleWeatherData(@Payload String data){
+        log.info("Received weather data: {}", data);
         // process data if needed and then:
         try {
             JsonNode node = new ObjectMapper().readTree(data);
-            WeatherSampleModel weatherData = convertWeatherSampleToWeathersampleModel(node);
+            WeatherSampleModel weatherData = buildWeathersampleModel(node);
             weatherRepository.save(weatherData);
         }
         catch (Exception e){
@@ -42,7 +43,7 @@ public class ProcessorService {
         }
     }
 
-    private WeatherSampleModel convertWeatherSampleToWeathersampleModel(JsonNode node){
+    private WeatherSampleModel buildWeathersampleModel(JsonNode node){
         // TODO: optimize to handle null values
         Location location = Location.builder()
                 .city(node.get("location").get("city").asText())
@@ -52,7 +53,6 @@ public class ProcessorService {
                 .build();
 
         Timestamp timestamp = new Timestamp(node.get("time").asLong());
-        // TODO: set timezone
         return WeatherSampleModel.builder()
                 .source(node.get("source").asText())
                 .time(timestamp)
@@ -62,46 +62,28 @@ public class ProcessorService {
                 .build();
     }
 
+    public WeatherPacket getWeatherData(Location location){
+        List<WeatherSample> weatherSamples = weatherRepository.findAll()
+                .stream()
+                .map(WeatherSampleModel::toWeatherSample)
+                .toList();
+        return new WeatherPacket(weatherSamples, location);
+    }
+
     public WeatherPacket getWeatherDataByLocation(Location location){
-        List<WeatherSampleModel> weatherSamples = weatherRepository.findAllByLocation(location);
-        return buildWeatherPacketFromSamples(weatherSamples, location);
+        List<WeatherSample> weatherSamples = weatherRepository.findAllByLocation(location)
+                .stream()
+                .map(WeatherSampleModel::toWeatherSample)
+                .toList();
+        return new WeatherPacket(weatherSamples, location);
     }
 
-    public WeatherPacket getAllWeatherData(Location location){
-        List<WeatherSampleModel> weatherSamples = weatherRepository.findAll();
-        return buildWeatherPacketFromSamples(weatherSamples, location);
-    }
-
-    private WeatherPacket buildWeatherPacketFromSamples(List<WeatherSampleModel> weatherSamples, Location location){
-        WeatherList accuList = new WeatherList("accu-weather", location);
-        WeatherList openList = new WeatherList("open-weather", location);
-        WeatherList tomorrowList = new WeatherList("tomorrow-weather", location);
-
-        for (WeatherSampleModel weatherSample : weatherSamples){
-            System.out.println(weatherSample);
-            if (weatherSample == null ||
-                    weatherSample.getLocation() == null ||
-                    !weatherSample.getLocation().equals(location))
-                continue;
-            else if (weatherSample.getSource().equals("accu-weather"))
-                accuList.addSample(convertWeatherSampleModelToWeatherSample(weatherSample));
-            else if (weatherSample.getSource().equals("open-weather"))
-                openList.addSample(convertWeatherSampleModelToWeatherSample(weatherSample));
-            else if (weatherSample.getSource().equals("tomorrow-weather"))
-                tomorrowList.addSample(convertWeatherSampleModelToWeatherSample(weatherSample));
-        }
-
-        return new WeatherPacket(accuList, openList, tomorrowList);
-    }
-
-    private WeatherSample convertWeatherSampleModelToWeatherSample(WeatherSampleModel weatherData){
-        return WeatherSample.builder()
-                .source(weatherData.getSource())
-                .time(weatherData.getTime())
-                .location(weatherData.getLocation())
-                .temperature(weatherData.getTemperature())
-                .humidity(weatherData.getHumidity())
-                .build();
+    public WeatherPacket getWeatherDataByLocationAndTime(Location location, Timestamp start, Timestamp end){
+        List<WeatherSample> weatherSamples = weatherRepository.findAllByLocationAndTimeBetween(location, start, end)
+                .stream()
+                .map(WeatherSampleModel::toWeatherSample)
+                .toList();
+        return new WeatherPacket(weatherSamples, location);
     }
 
     public void deleteAll(){

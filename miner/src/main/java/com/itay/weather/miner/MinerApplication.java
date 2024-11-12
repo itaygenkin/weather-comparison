@@ -21,6 +21,6 @@ public class MinerApplication {
 
     @Bean
     public MinerList minerList() {
-        return new MinerList(MinerValues.getInstance());
+        return new MinerList();
     }
 }

@@ -19,7 +19,7 @@ services:
   mysql:
     image: mysql:8.4
     ports:
-      - "3307:3306"
+      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -53,6 +53,8 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/weather_aggregator_db
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_DATASOURCE_USERNAME: root1
+      SPRING_DATASOURCE_PASSWORD: root1
     ports:
       - "8081:8081"
 

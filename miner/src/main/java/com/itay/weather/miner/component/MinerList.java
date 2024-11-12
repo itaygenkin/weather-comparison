@@ -11,7 +11,8 @@ import java.util.ArrayList;
 public class MinerList {
     private final ArrayList<AbstractMiner> miners = new ArrayList<>();
 
-    public MinerList(MinerValues values) {
+    public MinerList() {
+        MinerValues values = MinerValues.getInstance();
         miners.add(new TomorrowMiner("tomorrow-weather", values.getTomorrowApiUrl(), values.getTomorrowApiKey()));
     }
 
