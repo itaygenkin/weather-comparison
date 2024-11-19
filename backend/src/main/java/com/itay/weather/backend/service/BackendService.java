@@ -3,7 +3,6 @@ package com.itay.weather.backend.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itay.weather.dto.Location;
-import com.itay.weather.dto.MinerData;
 import com.itay.weather.dto.WeatherPacket;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +19,10 @@ import java.util.Map;
 public class BackendService {
 
     private final RestTemplate restTemplate;
-    private final MinerData[] miners;
 
     @Autowired
     public BackendService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-        miners = new MinerData[]{
-//                new MinerTriggerData("localhost:8082", "accu-weather"),
-//                new MinerTriggerData("localhost:8082", "open-weather"),
-                new MinerData("localhost:8082", "tomorrow")};
     }
 
     public WeatherPacket getWeatherData(Location location) {
@@ -52,23 +46,20 @@ public class BackendService {
     public boolean trigger(Location location) {
         String url = "http://localhost:8082/miner/fetch";
         try {
-            for (MinerData miner : miners) {
-                // creating url
-                HttpEntity<String> requestEntity = createHttpEntity(location);
-                ResponseEntity<Void> response = restTemplate.postForEntity(
-                        url,
-                        requestEntity,
-                        Void.class
-                );
-                log.info("response status: {}", response.getStatusCode());
-                return response.getStatusCode() == HttpStatus.OK;
-            }
+            // creating url
+            HttpEntity<String> requestEntity = createHttpEntity(location);
+            ResponseEntity<Void> response = restTemplate.postForEntity(
+                    url,
+                    requestEntity,
+                    Void.class
+            );
+            log.info("response status: {}", response.getStatusCode());
+            return response.getStatusCode() == HttpStatus.OK;
         }
         catch (RestClientException | JsonProcessingException e){
             log.error(e.getMessage());
             return false;
         }
-        return true;
     }
 
     private static HttpEntity<String> createHttpEntity(Location location) throws JsonProcessingException {
