@@ -29,11 +29,13 @@ public class MinerService {
 
     // TODO: use threads for concurrency or timeout
     public void fetchAndSendData(Location location) {
+        log.info("fetching data");
         for (AbstractMiner miner : miners.getMiners()) {
             String json = fetchDataFromApi(miner, location);
             if (json == null)
                 continue;
             try {
+                log.info("api response size: {}", json.length());
                 minerProducer.sendDataToKafka(miner.processResponse(json, location));
             } catch (JsonProcessingException e) {
                 log.error(e.getMessage(), e);
@@ -46,7 +48,7 @@ public class MinerService {
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
             if (!response.getStatusCode().is2xxSuccessful()){
-                log.info("failed to request weather data from tomorrow api");
+                log.info("failed to fetch weather data from {}", miner.getMinerName());
                 return null;
             }
             log.info("response status: {}", response.getStatusCode());

@@ -3,7 +3,6 @@ package com.itay.weather.processor.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itay.weather.dto.Location;
-import com.itay.weather.dto.WeatherList;
 import com.itay.weather.dto.WeatherPacket;
 import com.itay.weather.dto.WeatherSample;
 import com.itay.weather.processor.model.WeatherSampleModel;
@@ -29,9 +28,9 @@ public class ProcessorService {
         this.weatherRepository = weatherRepository;
     }
 
-    @KafkaListener(topics = "weather-data")
-    public void handleWeatherData(@Payload String data){
-        log.info("Received weather data: {}", data);
+    @KafkaListener(topics = "weather-data", groupId = "miner-group")
+    public void consume(@Payload String data){
+        log.info("received weather data: {}", data);
         // process data if needed and then:
         try {
             JsonNode node = new ObjectMapper().readTree(data);

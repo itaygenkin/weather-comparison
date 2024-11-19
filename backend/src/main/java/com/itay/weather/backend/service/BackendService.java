@@ -2,6 +2,8 @@ package com.itay.weather.backend.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itay.weather.backend.configuration.MinerProperties;
+import com.itay.weather.backend.configuration.ProcessorProperties;
 import com.itay.weather.dto.Location;
 import com.itay.weather.dto.WeatherPacket;
 import lombok.extern.slf4j.Slf4j;
@@ -19,14 +21,20 @@ import java.util.Map;
 public class BackendService {
 
     private final RestTemplate restTemplate;
+    private final ProcessorProperties processorProperties;
+    private final MinerProperties minerProperties;
 
     @Autowired
-    public BackendService(RestTemplate restTemplate) {
+    public BackendService(RestTemplate restTemplate, ProcessorProperties processorProperties, MinerProperties minerProperties) {
         this.restTemplate = restTemplate;
+        this.processorProperties = processorProperties;
+        this.minerProperties = minerProperties;
     }
 
-    public WeatherPacket getWeatherData(Location location) {
-        String url = "http://localhost:8081/api/weather?city={city}&country={country}";
+    public WeatherPacket getWeatherData(Location location, String start, String end) {
+        // TODO: use UriComponentsBuilder
+        String url = processorProperties.getBaseUrl() +
+                "weather?city={city}&country={country}&start={start}&end={end}";
         try {
             ResponseEntity<WeatherPacket> response = restTemplate.getForEntity(
                     url,
@@ -44,7 +52,7 @@ public class BackendService {
     }
 
     public boolean trigger(Location location) {
-        String url = "http://localhost:8082/miner/fetch";
+        String url = minerProperties.getBaseUrl();
         try {
             // creating url
             HttpEntity<String> requestEntity = createHttpEntity(location);

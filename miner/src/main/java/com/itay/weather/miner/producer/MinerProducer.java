@@ -18,13 +18,12 @@ public class MinerProducer {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    // TODO: fix kafka producer (failed to construct one)
     public void sendDataToKafka(WeatherSample weatherSample) {
-        log.info("Sending data to kafka topic: {};", topic);
+        log.info("sending data to kafka topic: '{}';", topic);
         try {
             kafkaTemplate.send(topic, weatherSample);
         } catch (Exception e) {
-            log.warn(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 }

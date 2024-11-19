@@ -1,5 +1,7 @@
 package com.itay.weather.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +13,10 @@ import java.sql.Timestamp;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonSerialize
+@JsonDeserialize
 public class WeatherSample {
+
     private String source;
     private Location location;
     private Timestamp time;
