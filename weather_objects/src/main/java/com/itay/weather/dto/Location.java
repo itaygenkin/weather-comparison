@@ -31,8 +31,8 @@ public class Location {
     public boolean equals(Location location){
         if (this.city.equals(location.getCity()) && this.country.equals(location.getCountry()))
             return true;
-        return Math.abs(this.latitude - location.getLatitude()) < 0.1 &&
-                Math.abs(this.longitude - location.getLongitude()) < 0.1;
+        return Math.abs(this.latitude - location.getLatitude()) < 0.2 &&
+                Math.abs(this.longitude - location.getLongitude()) < 0.2;
     }
 
     public HashMap<String, String> toHashMap(){

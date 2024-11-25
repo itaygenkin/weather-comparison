@@ -1,15 +1,11 @@
 package com.itay.weather.backend.controller;
 
-import com.itay.weather.dto.Location;
-import com.itay.weather.dto.WeatherList;
-import com.itay.weather.dto.WeatherPacket;
-import com.itay.weather.dto.WeatherSample;
 import com.itay.weather.backend.service.BackendService;
+import com.itay.weather.dto.Location;
+import com.itay.weather.dto.WeatherPacket;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.sql.Timestamp;
 
 @RestController
 @RequestMapping("/api")
@@ -25,12 +21,14 @@ public class BackendController {
     @GetMapping("/weather-data")
     public ResponseEntity<WeatherPacket> getWeatherData(
             @RequestParam String city,
-            @RequestParam String country
+            @RequestParam String country,
+            @RequestParam String start,
+            @RequestParam String end
     ) {
-        log.info("GET request: city_param: '{}', country_param: '{}'", city, country);
+        log.info("GET request: city({}), country({}), from({}), to({})", city, country, start, end);
 
         Location location = new Location(city, country);
-        WeatherPacket weatherPacket = backendService.getWeatherData(location);
+        WeatherPacket weatherPacket = backendService.getWeatherData(location, start, end);
         if (weatherPacket == null)
             return ResponseEntity.notFound().build();
 

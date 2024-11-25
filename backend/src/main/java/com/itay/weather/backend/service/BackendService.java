@@ -40,7 +40,9 @@ public class BackendService {
                     url,
                     WeatherPacket.class,
                     location.getCity(),
-                    location.getCountry()
+                    location.getCountry(),
+                    start,
+                    end
             );
             log.info("response status: {}", response.getStatusCode());
             return response.getBody();

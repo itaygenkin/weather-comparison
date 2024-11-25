@@ -26,13 +26,17 @@ public class ProcessorController {
     @GetMapping("/weather")
     public ResponseEntity<WeatherPacket> getWeatherData(
             @RequestParam(value = "city") String city,
-            @RequestParam(value = "country") String country
+            @RequestParam(value = "country") String country,
+            @RequestParam(value = "start") String start,
+            @RequestParam(value = "end") String end
     ){
         log.info("function call: 'getWeatherData'");
-        log.info("params: city({}), country({})", city, country);
+        log.info("params: city({}), country({}), from({}), to({})", city, country, start, end);
 
         Location location = new Location(city, country);
-        WeatherPacket data = processorService.getWeatherDataByLocation(location);
+        WeatherPacket data = processorService.getWeatherDataByLocationAndTime(
+                location, Timestamp.valueOf(start), Timestamp.valueOf(end)
+        );
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
