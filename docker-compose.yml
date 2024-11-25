@@ -1,5 +1,5 @@
 # docker-compose doesn't run all the services automatically right now
-# TODO: docker-compose is to be fixed
+# TODO: docker-compose is to be fixed to run all services automatically.
 
 services:
   zookeeper:
