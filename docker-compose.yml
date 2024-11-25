@@ -1,3 +1,6 @@
+# docker-compose doesn't run all the services automatically right now
+# TODO: docker-compose is to be fixed
+
 services:
   zookeeper:
     image: zookeeper:3.6.3
@@ -27,44 +30,52 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - mysql-data:/var/lib/mysql
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: "2"
+#          memory: 4G
+#        reservations:
+#          cpus: "1"
+#          memory: 2G
 
-  miner:
-    build:
-      context: ./miner
-    ports:
-      - "8082:8082"
-    depends_on:
-      - kafka
+#  miner:
+#    build:
+#      context: ./miner
+#    ports:
+#      - "8082:8082"
+#    depends_on:
+#      - kafka
 
-  backend:
-    build:
-      context: ./backend
-    ports:
-      - "8080:8080"
-    depends_on:
-      - miner
+#  backend:
+#    build:
+#      context: ./backend
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - miner
 
-  processor:
-    build:
-      context: ./processor
-    depends_on:
-      - kafka
-      - mysql
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/weather_aggregator_db
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      SPRING_DATASOURCE_USERNAME: root1
-      SPRING_DATASOURCE_PASSWORD: root1
-    ports:
-      - "8081:8081"
+#  processor:
+#    build:
+#      context: ./processor
+#    depends_on:
+#      - kafka
+#      - mysql
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/weather_aggregator_db
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+#      SPRING_DATASOURCE_USERNAME: root1
+#      SPRING_DATASOURCE_PASSWORD: root1
+#    ports:
+#      - "8081:8081"
 
-  frontend:
-    build:
-      context: ./frontend
-    ports:
-      - "3000:3000"
-    depends_on:
-      - backend
+#  frontend:
+#    build:
+#      context: ./frontend
+#    ports:
+#      - "3000:3000"
+#    depends_on:
+#      - backend
 
 
 volumes:
