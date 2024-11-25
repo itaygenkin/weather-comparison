@@ -13,5 +13,5 @@ This repository's main goal is to allow us to compare the differences in weather
 
 ## Getting Started
 - Clone the repository on your end (the frontend should be cloned from a different branch - see frontend README).
-- Run 'docker-compose up --build'.
+- Run ```docker-compose up --build```.
 - Run all the services.
