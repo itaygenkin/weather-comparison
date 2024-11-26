@@ -11,7 +11,10 @@ This repository's main goal is to allow us to compare the differences in weather
 
 
 
-## Getting Started
+### Getting Started
 - Clone the repository on your end (the frontend should be cloned from a different branch - see frontend README).
+- Fill MySql properties (MYSQL_ROOT_PASSWORD, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASSWORD) in the docker-compose file or add them to a .env file in the root directory.
 - Run ```docker-compose up --build```.
 - Run all the services.
+
+- Notice: The class MinerConfig (path: Weather-Comparison\miner\src\main\java\com\itay\weather\miner\configuration\MinerConfig.java) gets some properties from a .env file that isn't provided here.
