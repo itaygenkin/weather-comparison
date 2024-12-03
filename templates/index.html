@@ -2,19 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../static/styles.css"/>
     <title>Weather-Comparison</title>
 </head>
 <body>
     <h1>Weather Comparison</h1>
     <form action="/fetch-weather" method="get">
-        <label>
-            <input type="text" name="city" placeholder="City">
-        </label>
-        <label>
-            <input type="text" name="country" placeholder="Country">
-        </label>
+        <p style="font-family: Arial,sans-serif">Compare in Graphs</p>
+        <label><input type="text" name="city" placeholder="City"></label>
+        <label><input type="text" name="country" placeholder="Country"></label>
+{#        <label>#}
+{#            <input type="text" name="start_date" placeholder="Start Date">#}
+{#        </label>#}
+{#        <label>#}
+{#            <input type="text" name="end_date" placeholder="End Date">#}
+{#        </label>#}
         {#        <input type="text" name="end" placeholder="End Date">#}
         <button type="submit" style="background: cornflowerblue">Compare</button>
+    </form>
+
+    <form action="/trigger" method="post">
+        <p style="font-family: Arial,sans-serif">Updating Data</p>
+        <label><input type="text" name="city" placeholder="City"></label>
+        <label><input type="text" name="country" placeholder="Country"></label>
+        <button type="submit" style="background: cornflowerblue">Update</button>
     </form>
 </body>
 </html>

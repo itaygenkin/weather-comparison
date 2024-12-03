@@ -3,7 +3,7 @@ import plotly.express as px
 
 def title_pretty_print(city: str, country: str) -> str:
     """
-    convert the city and country names into a pretty formatted string (camel-case)
+    convert the city and country names into a pretty formatted string (Camel Case)
     :param city: a city name (str)
     :param country: a country name (str)
     :return: formatted string
@@ -52,27 +52,20 @@ def get_clean_samples(json: dict) -> dict:
 
 def get_default_dict_from_sources(json: dict) -> dict:
     sources = [json['list1']['source'], json['list2']['source'], json['list3']['source']]
-    return {sources[0]: {
-        "temperature": [],
-        "humidity": [],
-        "timestamp": []
-        },
-        sources[1]: {
-            "temperature": [],
-            "humidity": [],
-            "timestamp": []
-        },
-        sources[2]: {
+    return {
+        source: {
             "temperature": [],
             "humidity": [],
             "timestamp": []
         }
+        for source in sources
     }
 
 
 def clean_data(json: dict) -> dict:
     data = get_clean_samples(json)
     my_dict = get_default_dict_from_sources(json)
+
     for key in my_dict.keys():
         for item in data[key]:
             my_dict[key]['temperature'].append(item['temperature'])
@@ -90,4 +83,10 @@ def create_html_graph(x_data, y_data, title: str, y_label: str):
     figure.data[2].name = 'Tomorrow'
     return figure.to_html(full_html=True)
 
+
+def is_empty_response(response_json):
+    for key in response_json.keys():
+        if response_json[key]['samples']:
+            return False
+    return True
 

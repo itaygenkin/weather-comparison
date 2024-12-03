@@ -1,0 +1,16 @@
+body {
+    background-color: lightblue;
+    font-size: 18px;
+}
+
+h1 {
+    color: black;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 36px;
+}
+
+h2 {
+    /*text-align: end;*/
+    font-size: 18px;
+}
