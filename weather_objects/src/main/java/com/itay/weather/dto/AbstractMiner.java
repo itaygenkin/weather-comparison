@@ -26,5 +26,5 @@ public abstract class AbstractMiner {
         return url.substring(0, url.length() - 1);
     }
 
-    public abstract WeatherSample processResponse(String response, Location location) throws JsonProcessingException;
+    public abstract WeatherSample processResponse(String response, Location location) throws JsonProcessingException, NullPointerException;
 }

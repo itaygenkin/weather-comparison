@@ -1,15 +1,15 @@
 package com.itay.weather.processor.controller;
 
-import com.itay.weather.processor.service.ProcessorService;
 import com.itay.weather.dto.Location;
 import com.itay.weather.dto.WeatherPacket;
+import com.itay.weather.processor.service.ProcessorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("/api")
@@ -34,9 +34,16 @@ public class ProcessorController {
         log.info("params: city({}), country({}), from({}), to({})", city, country, start, end);
 
         Location location = new Location(city, country);
-        WeatherPacket data = processorService.getWeatherDataByLocationAndTime(
-                location, Timestamp.valueOf(start), Timestamp.valueOf(end)
-        );
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+//        WeatherPacket data = processorService.getWeatherDataByLocationAndTime(
+//                location, LocalDateTime.parse(start, formatter), LocalDateTime.parse(end, formatter)
+//        );
+//        WeatherPacket data = processorService.getWeatherDataByLocation(location);
+        WeatherPacket data = processorService.getWeatherData(location);
+
+        System.out.println(data.getList3().getSamples().size());
+
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 

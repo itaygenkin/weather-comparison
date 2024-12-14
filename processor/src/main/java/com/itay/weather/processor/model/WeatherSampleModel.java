@@ -5,7 +5,7 @@ import com.itay.weather.dto.WeatherSample;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -21,7 +21,7 @@ public class WeatherSampleModel {
     private String source;
     @Embedded
     private Location location;
-    private Timestamp time;
+    private LocalDateTime time;
     private Double temperature;
     private Integer humidity;
 
@@ -33,8 +33,8 @@ public class WeatherSampleModel {
         this.humidity = weatherSample.getHumidity();
     }
 
-    public boolean isInTime(Timestamp start, Timestamp end) {
-        return time.compareTo(start) >= 0 && time.compareTo(end) <= 0;
+    public boolean isInTime(LocalDateTime start, LocalDateTime end) {
+        return time.isAfter(start) && time.isBefore(end);
     }
 
     public WeatherSample toWeatherSample(){

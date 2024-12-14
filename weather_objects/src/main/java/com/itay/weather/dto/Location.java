@@ -1,4 +1,6 @@
 package com.itay.weather.dto;
+
+import jakarta.persistence.Embeddable;
 import lombok.*;
 
 import java.util.HashMap;
@@ -9,6 +11,7 @@ import java.util.HashMap;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Embeddable
 public class Location {
     private String city;
     private String country;

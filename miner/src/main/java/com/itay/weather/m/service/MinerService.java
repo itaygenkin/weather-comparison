@@ -1,10 +1,11 @@
-package com.itay.weather.miner.service;
+package com.itay.weather.m.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.itay.weather.miner.component.MinerList;
-import com.itay.weather.miner.producer.MinerProducer;
 import com.itay.weather.dto.AbstractMiner;
 import com.itay.weather.dto.Location;
+import com.itay.weather.dto.WeatherSample;
+import com.itay.weather.m.component.MinerList;
+import com.itay.weather.m.producer.MinerProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,15 +30,12 @@ public class MinerService {
 
     // TODO: use threads for concurrency or timeout
     public void fetchAndSendData(Location location) {
-        log.info("fetching data");
         for (AbstractMiner miner : miners.getMiners()) {
             String json = fetchDataFromApi(miner, location);
-            if (json == null)
-                continue;
             try {
-                log.info("api response size: {}", json.length());
-                minerProducer.sendDataToKafka(miner.processResponse(json, location));
-            } catch (JsonProcessingException e) {
+                WeatherSample weatherSample = miner.processResponse(json, location);
+                minerProducer.sendDataToKafka(weatherSample);
+            } catch (JsonProcessingException | NullPointerException e) {
                 log.error(e.getMessage(), e);
             }
         }

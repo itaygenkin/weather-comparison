@@ -7,14 +7,14 @@ import com.itay.weather.dto.WeatherPacket;
 import com.itay.weather.dto.WeatherSample;
 import com.itay.weather.processor.model.WeatherSampleModel;
 import com.itay.weather.processor.repository.WeatherRepository;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -42,7 +42,7 @@ public class ProcessorService {
         }
     }
 
-    private WeatherSampleModel buildWeathersampleModel(JsonNode node){
+    private WeatherSampleModel buildWeathersampleModel(JsonNode node) throws NullPointerException {
         // TODO: optimize to handle null values
         Location location = Location.builder()
                 .city(node.get("location").get("city").asText())
@@ -51,14 +51,34 @@ public class ProcessorService {
                 .longitude(node.get("location").get("longitude").asDouble())
                 .build();
 
-        Timestamp timestamp = new Timestamp(node.get("time").asLong());
+        LocalDateTime time = toLocalDateTime(node.get("time").toString());
+
         return WeatherSampleModel.builder()
                 .source(node.get("source").asText())
-                .time(timestamp)
+                .time(time)
                 .location(location)
                 .temperature(node.get("temperature").asDouble())
                 .humidity(node.get("humidity").asInt())
                 .build();
+    }
+
+    private static LocalDateTime toLocalDateTime(String time) throws NullPointerException, IllegalArgumentException {
+        if (time == null || time.isEmpty())
+            throw new NullPointerException();
+
+        String[] timeValues = time.substring(1, time.length() - 1).split(",");
+        List<Integer> intTimeValues = Arrays.stream(timeValues).map(Integer::valueOf).toList();
+
+        if (timeValues.length != 5)
+            throw new IllegalArgumentException("cannot parse time string <" + time + ">");
+
+        return LocalDateTime.of(
+                intTimeValues.get(0),
+                intTimeValues.get(1),
+                intTimeValues.get(2),
+                intTimeValues.get(3),
+                intTimeValues.get(4)
+        );
     }
 
     public WeatherPacket getWeatherData(Location location){
