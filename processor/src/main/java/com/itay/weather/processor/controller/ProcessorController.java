@@ -39,8 +39,7 @@ public class ProcessorController {
 //        WeatherPacket data = processorService.getWeatherDataByLocationAndTime(
 //                location, LocalDateTime.parse(start, formatter), LocalDateTime.parse(end, formatter)
 //        );
-//        WeatherPacket data = processorService.getWeatherDataByLocation(location);
-        WeatherPacket data = processorService.getWeatherData(location);
+        WeatherPacket data = processorService.getWeatherDataByLocation(location);
 
         System.out.println(data.getList3().getSamples().size());
 

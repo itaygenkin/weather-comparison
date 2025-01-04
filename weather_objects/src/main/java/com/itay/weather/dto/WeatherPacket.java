@@ -23,9 +23,7 @@ public class WeatherPacket {
         this.list3 = new WeatherList(sources[2], location);
 
         for (WeatherSample weatherSample : weatherSamples){
-            if (weatherSample == null ||
-                    weatherSample.getLocation() == null ||
-                    !weatherSample.getLocation().equals(location))
+            if (weatherSample == null || weatherSample.getLocation() == null || !weatherSample.getLocation().equals(location))
                 continue;
             else if (weatherSample.getSource().equals(sources[0]))
                 this.list1.addSample(weatherSample);

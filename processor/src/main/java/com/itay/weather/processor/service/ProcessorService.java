@@ -81,24 +81,21 @@ public class ProcessorService {
         );
     }
 
-    public WeatherPacket getWeatherData(Location location){
+    public List<WeatherSample> getWeatherData() {
+        return weatherRepository.findAll().stream().map(WeatherSampleModel::toWeatherSample).toList();
+    }
+
+    public WeatherPacket getWeatherDataByLocation(Location location) {
         List<WeatherSample> weatherSamples = weatherRepository.findAll()
                 .stream()
                 .map(WeatherSampleModel::toWeatherSample)
                 .toList();
-        return new WeatherPacket(weatherSamples, location);
+        return new WeatherPacket(weatherSamples, location);  // WeatherPacket constructor filters the samples by location
     }
 
-    public WeatherPacket getWeatherDataByLocation(Location location){
-        List<WeatherSample> weatherSamples = weatherRepository.findAllByLocation(location)
-                .stream()
-                .map(WeatherSampleModel::toWeatherSample)
-                .toList();
-        return new WeatherPacket(weatherSamples, location);
-    }
-
-    public WeatherPacket getWeatherDataByLocationAndTime(Location location, Timestamp start, Timestamp end){
-        List<WeatherSample> weatherSamples = weatherRepository.findAllByLocationAndTimeBetween(location, start, end)
+    // TODO: fix it so the result is filtered by time
+    public WeatherPacket getWeatherDataByLocationAndTime(Location location, LocalDateTime start, LocalDateTime end) {
+        List<WeatherSample> weatherSamples = weatherRepository.findAllByTimeBetween(start, end)
                 .stream()
                 .map(WeatherSampleModel::toWeatherSample)
                 .toList();

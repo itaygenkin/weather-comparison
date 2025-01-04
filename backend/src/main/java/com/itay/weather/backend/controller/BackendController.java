@@ -29,6 +29,7 @@ public class BackendController {
 
         Location location = new Location(city, country);
         WeatherPacket weatherPacket = backendService.getWeatherData(location, start, end);
+
         if (weatherPacket == null)
             return ResponseEntity.notFound().build();
 
@@ -37,7 +38,8 @@ public class BackendController {
 
     @PostMapping("/trigger")
     public ResponseEntity<Void> triggerMiners(@RequestBody Location location){
-        log.info("GET request: location_param: '{}'", location);
+        log.info("POST request: location_param: '{}'", location);
+
         if (backendService.trigger(location))
             return ResponseEntity.ok().build();
         return ResponseEntity.badRequest().build();
