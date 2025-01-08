@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -22,10 +23,13 @@ public class WeatherPacket {
         this.list2 = new WeatherList(sources[1], location);
         this.list3 = new WeatherList(sources[2], location);
 
+        // filter non-relevant samples
+        weatherSamples = weatherSamples.stream()
+                .filter(ws -> (ws != null) && (ws.getLocation() != null))
+                .toList();
+
         for (WeatherSample weatherSample : weatherSamples){
-            if (weatherSample == null || weatherSample.getLocation() == null || !weatherSample.getLocation().equals(location))
-                continue;
-            else if (weatherSample.getSource().equals(sources[0]))
+            if (weatherSample.getSource().equals(sources[0]))
                 this.list1.addSample(weatherSample);
             else if (weatherSample.getSource().equals(sources[1]))
                 this.list2.addSample(weatherSample);
@@ -33,4 +37,12 @@ public class WeatherPacket {
                 this.list3.addSample(weatherSample);
         }
     }
+
+    public WeatherPacket(List<WeatherSample> weatherSamples, Location location, LocalDateTime from, LocalDateTime to) {
+        weatherSamples = weatherSamples.stream().filter(ws -> ws != null &&
+                        !(ws.getTime() == null || ws.getTime().isBefore(from) || ws.getTime().isAfter(to)))
+                .toList();
+        this(weatherSamples, location);
+    }
+
 }

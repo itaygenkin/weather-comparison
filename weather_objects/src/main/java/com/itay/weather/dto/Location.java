@@ -28,14 +28,16 @@ public class Location {
     }
 
     public String toString(){
+        if (city == null || country == null)
+            return "location=NULL";
         return String.format("location=%s-%s", city, country);
     }
 
     public boolean equals(Location location){
-        if (this.city.equals(location.getCity()) && this.country.equals(location.getCountry()))
-            return true;
-        return Math.abs(this.latitude - location.getLatitude()) < 0.2 &&
-                Math.abs(this.longitude - location.getLongitude()) < 0.2;
+        if (city == null || country == null)
+            return false;
+        else
+            return (this.city.equals(location.getCity()) && this.country.equals(location.getCountry()));
     }
 
     public HashMap<String, String> toHashMap(){

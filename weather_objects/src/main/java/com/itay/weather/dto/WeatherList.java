@@ -2,7 +2,6 @@ package com.itay.weather.dto;
 
 import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -11,7 +10,6 @@ import java.util.List;
 @Data
 @Getter
 @Setter
-@NoArgsConstructor
 public class WeatherList {
     private String source;
     private Location location;
@@ -32,8 +30,8 @@ public class WeatherList {
     }
 
     public void addSample(WeatherSample weatherSample) {
-        if (weatherSample.getSource().equals(source) &&
-                weatherSample.getLocation().equals(location))
+        if (weatherSample.getSource().equals(source) && weatherSample.getLocation().equals(this.location)) {
             this.samples.add(weatherSample);
+        }
     }
 }
