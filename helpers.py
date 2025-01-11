@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import plotly.express as px
 
 
@@ -90,3 +92,13 @@ def is_empty_response(response_json):
             return False
     return True
 
+
+def format_time(time: str) -> str:
+    return time[:10] + " " + time[11:]
+
+
+def get_default_time():
+    now = datetime.now()
+    default_start_time = now.replace(hour=0, minute=0).strftime('%Y-%m-%dT%H:%M')
+    default_end_time = now.strftime('%Y-%m-%dT%H:%M')
+    return default_start_time, default_end_time

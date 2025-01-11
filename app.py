@@ -9,11 +9,15 @@ app = Flask(__name__)
 app.logger.setLevel(logging.INFO)  # Set log level to INFO
 handler = logging.FileHandler('app.log')  # Log to a file
 app.logger.addHandler(handler)
+# TODO: add date and time to the logs
 
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    default_time = helpers.get_default_time()
+    return render_template('index.html',
+                           default_start_time=default_time[0],
+                           default_end_time=default_time[1])
 
 
 @app.route('/fetch-weather', methods=['GET'])
@@ -22,9 +26,9 @@ def fetch_weather():
 
     city_location = request.args.get('city')
     country_location = request.args.get('country')
-    # TODO: request start date and end date from user
-    start_date = "2024-08-20 09:00:00"  # request.args.get('start_date')
-    end_date = "2024-08-31 09:00:00"  # request.args.get('end_date')
+
+    start_date = helpers.format_time(request.args.get('start_date'))
+    end_date = helpers.format_time(request.args.get('end_date'))
 
     params = {'city': city_location,
               'country': country_location,
@@ -32,6 +36,8 @@ def fetch_weather():
               'end': end_date}
     
     response = requests.get(url, params=params)
+    app.logger.info(f"fetch_weather:\tparams({params});\tresponse code: {response.status_code}")
+
     if response.status_code >= 400:
         app.logger.error(response.text)
         return render_template('index.html')
@@ -76,10 +82,15 @@ def trigger():
               'country': request.values.get('country')}
 
     response = requests.post(url, json=params, headers=headers)
-    if response.status_code >= 400:
-        pass
+    app.logger.info(f"trigger:\tparams({params});\tresponse code: {response.status_code}")
 
-    return render_template('index.html')
+    if response.status_code >= 400:
+        logging.info(f"trigger failed, status code: {response.status_code}")
+
+    default_time = helpers.get_default_time()
+    return render_template('index.html',
+                           default_start_time=default_time[0],
+                           default_end_time=default_time[1])
 
 
 if __name__ == '__main__':

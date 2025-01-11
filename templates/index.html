@@ -9,15 +9,29 @@
     <h1>Weather Comparison</h1>
     <form action="/fetch-weather" method="get">
         <p style="font-family: Arial,sans-serif">Compare in Graphs</p>
-        <label><input type="text" name="city" placeholder="City"></label>
-        <label><input type="text" name="country" placeholder="Country"></label>
-{#        <label>#}
-{#            <input type="text" name="start_date" placeholder="Start Date">#}
-{#        </label>#}
-{#        <label>#}
-{#            <input type="text" name="end_date" placeholder="End Date">#}
-{#        </label>#}
-        {#        <input type="text" name="end" placeholder="End Date">#}
+
+        <label><input type="text" name="city" placeholder="City" required></label>
+        <label><input type="text" name="country" placeholder="Country" required></label>
+
+        <label for="start_date"></label>
+        <input
+                type="datetime-local"
+                name="start_date"
+                id="start_date"
+                placeholder="Start Date"
+                value="{{ default_start_time }}"
+                required
+        >
+        <label for="end_date"></label>
+        <input
+                type="datetime-local"
+                name="end_date"
+                id="end_date"
+                placeholder="End Date"
+                value="{{ default_end_time }}"
+                required
+        >
+
         <button type="submit" style="background: cornflowerblue">Compare</button>
     </form>
 
