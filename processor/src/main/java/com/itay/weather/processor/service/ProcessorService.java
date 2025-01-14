@@ -93,13 +93,12 @@ public class ProcessorService {
         return new WeatherPacket(weatherSamples, location);  // WeatherPacket constructor filters the samples by location
     }
 
-    // TODO: fix it so the result is filtered by time
     public WeatherPacket getWeatherDataByLocationAndTime(Location location, LocalDateTime start, LocalDateTime end) {
         List<WeatherSample> weatherSamples = weatherRepository.findAllByTimeBetween(start, end)
                 .stream()
                 .map(WeatherSampleModel::toWeatherSample)
                 .toList();
-        return new WeatherPacket(weatherSamples, location);
+        return new WeatherPacket(weatherSamples, location, start, end);
     }
 
     public void deleteAll(){

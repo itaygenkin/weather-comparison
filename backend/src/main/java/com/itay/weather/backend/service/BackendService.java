@@ -12,6 +12,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,29 +32,27 @@ public class BackendService {
         this.minerProperties = minerProperties;
     }
 
-    public WeatherPacket getWeatherData(Location location, String start, String end) {
-        // TODO: use UriComponentsBuilder
-        String url = processorProperties.getBaseUrl() +
-                "weather?city={city}&country={country}&start={start}&end={end}";
+    public WeatherPacket getWeatherData(Location location, String from, String to) {
+        String Url = UriComponentsBuilder.fromHttpUrl(processorProperties.getBaseUrl())
+                .path("weather")
+                .queryParam("city", location.getCity())
+                .queryParam("country", location.getCountry())
+                .queryParam("from", from)
+                .queryParam("to", to)
+                .toUriString();
+        System.out.println("url: " + Url);
         try {
-            ResponseEntity<WeatherPacket> response = restTemplate.getForEntity(
-                    url,
-                    WeatherPacket.class,
-                    location.getCity(),
-                    location.getCountry(),
-                    start,
-                    end
-            );
+            ResponseEntity<WeatherPacket> response = restTemplate.getForEntity(Url, WeatherPacket.class);
             log.info("response status: {}", response.getStatusCode());
             return response.getBody();
-        }
-        catch (RestClientException e) {
+        } catch (RestClientException e) {
             log.error(e.getMessage());
             return null;
         }
     }
 
     public boolean trigger(Location location) {
+        // TODO: use UriComponentBuilder
         String url = minerProperties.getBaseUrl();
         try {
             // creating url

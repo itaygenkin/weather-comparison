@@ -7,9 +7,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 @RestController
 @RequestMapping("/api")
@@ -27,21 +32,26 @@ public class ProcessorController {
     public ResponseEntity<WeatherPacket> getWeatherData(
             @RequestParam(value = "city") String city,
             @RequestParam(value = "country") String country,
-            @RequestParam(value = "start") String start,
-            @RequestParam(value = "end") String end
+            @RequestParam(value = "from") String from,
+            @RequestParam(value = "to") String to
     ){
         log.info("function call: 'getWeatherData'");
-        log.info("params: city({}), country({}), from({}), to({})", city, country, start, end);
+        log.info("params: city({}), country({}), from({}), to({})", city, country, from, to);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
         Location location = new Location(city, country);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime fromTime;
+        LocalDateTime toTime;
 
-//        WeatherPacket data = processorService.getWeatherDataByLocationAndTime(
-//                location, LocalDateTime.parse(start, formatter), LocalDateTime.parse(end, formatter)
-//        );
-        WeatherPacket data = processorService.getWeatherDataByLocation(location);
-
-        System.out.println(data.getList3().getSamples().size());
+        try {
+            fromTime = LocalDateTime.parse(from, formatter);
+            toTime = LocalDateTime.parse(to, formatter);
+        } catch (DateTimeParseException e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        WeatherPacket data = processorService.getWeatherDataByLocationAndTime(location, fromTime, toTime);
 
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
