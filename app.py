@@ -27,8 +27,8 @@ def fetch_weather():
     city_location = request.args.get('city')
     country_location = request.args.get('country')
 
-    start_date = helpers.format_time(request.args.get('start_date'))
-    end_date = helpers.format_time(request.args.get('end_date'))
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
 
     params = {'city': city_location,
               'country': country_location,
