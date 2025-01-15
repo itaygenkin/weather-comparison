@@ -33,16 +33,16 @@ public class BackendService {
     }
 
     public WeatherPacket getWeatherData(Location location, String from, String to) {
-        String Url = UriComponentsBuilder.fromHttpUrl(processorProperties.getBaseUrl())
+        String uri = UriComponentsBuilder.fromHttpUrl(processorProperties.getBaseUrl())
                 .path("weather")
                 .queryParam("city", location.getCity())
                 .queryParam("country", location.getCountry())
                 .queryParam("from", from)
                 .queryParam("to", to)
                 .toUriString();
-        System.out.println("url: " + Url);
+
         try {
-            ResponseEntity<WeatherPacket> response = restTemplate.getForEntity(Url, WeatherPacket.class);
+            ResponseEntity<WeatherPacket> response = restTemplate.getForEntity(uri, WeatherPacket.class);
             log.info("response status: {}", response.getStatusCode());
             return response.getBody();
         } catch (RestClientException e) {
@@ -53,35 +53,35 @@ public class BackendService {
 
     public boolean trigger(Location location) {
         // TODO: use UriComponentBuilder
-        String url = minerProperties.getBaseUrl();
+        String uri = UriComponentsBuilder
+                .fromHttpUrl(minerProperties.getBaseUrl())
+                .path("fetch")
+                .toUriString();
         try {
-            // creating url
-            HttpEntity<String> requestEntity = createHttpEntity(location);
-            ResponseEntity<Void> response = restTemplate.postForEntity(
-                    url,
-                    requestEntity,
-                    Void.class
-            );
+            // create http entity
+            HttpEntity<String> httpEntity = createHttpEntity(location);
+            ResponseEntity<Void> response = restTemplate.postForEntity(uri, httpEntity, Void.class);
+
             log.info("response status: {}", response.getStatusCode());
+
             return response.getStatusCode() == HttpStatus.OK;
-        }
-        catch (RestClientException | JsonProcessingException e){
+        } catch (RestClientException | JsonProcessingException e) {
             log.error(e.getMessage());
             return false;
         }
     }
 
     private static HttpEntity<String> createHttpEntity(Location location) throws JsonProcessingException {
-        // creating headers
+        // create headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        // creating body to the post request
+        // create body to the post request
         Map<String, String> bodyParams = new HashMap<>();
         bodyParams.put("city", location.getCity());
         bodyParams.put("country", location.getCountry());
 
-        // creating request entity
+        // create request entity
         String reqBodyData = new ObjectMapper().writeValueAsString(bodyParams);
         return new HttpEntity<>(reqBodyData, headers);
     }
