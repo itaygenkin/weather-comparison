@@ -51,26 +51,19 @@ def fetch_weather():
 
     ## visualization
     # create temperature plot
-    temperature_graph_html = helpers.create_html_graph(x_data=data["tomorrow-weather"]['timestamp'],
-                                                       y_data=data['tomorrow-weather']['temperature'],
-                                                       title="Temperature", y_label='Temperature (°C)')
-    humidity_graph_html = helpers.create_html_graph(x_data=data["tomorrow-weather"]["timestamp"],
-                                                    y_data=data['tomorrow-weather']['humidity'],
-                                                    title="Humidity", y_label='Humidity (%)')
-    # temperature_graph_html = helpers.create_html_graph(x_data=data["tomorrow-weather"]['timestamp'],
-    #                                                    y_data=[data['accu-weather']['temperature'],
-    #                                                            data['open-weather']['temperature'],
-    #                                                            data['tomorrow-weather']['temperature']],
-    #                                                    title="Temperature", y_label='Temperature (°C)')
-    # humidity_graph_html = helpers.create_html_graph(x_data=data["tomorrow-weather"]["timestamp"],
-    #                                                 y_data=[data['accu-weather']['humidity'],
-    #                                                         data['open-weather']['humidity'],
-    #                                                         data['tomorrow-weather']['humidity']],
-    #                                                 title="Humidity", y_label='Humidity (%)')
+    temperature_html_graph = helpers.html_graph(x_data=data["tomorrow-weather"]['timestamp'],
+                                          y_data=[data['tomorrow-weather']['temperature'],
+                                                  data['open-weather']['temperature']],
+                                          y_label='Temperature (°C)', value_name='Temperature')
+
+    humidity_html_graph = helpers.html_graph(x_data=data["tomorrow-weather"]['timestamp'],
+                                       y_data=[data['tomorrow-weather']['humidity'],
+                                               data['open-weather']['humidity']],
+                                       y_label='Humidity (%)', value_name='Humidity')
 
     return render_template('comparison.html',
-                           temperature_plot=temperature_graph_html,
-                           humidity_plot=humidity_graph_html)
+                           temperature_plot=temperature_html_graph,
+                           humidity_plot=humidity_html_graph)
 
 
 @app.route('/trigger', methods=['POST'])

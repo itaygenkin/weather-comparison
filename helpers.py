@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import plotly.express as px
+import pandas as pd
 
 
 def title_pretty_print(city: str, country: str) -> str:
@@ -76,8 +77,23 @@ def clean_data(json: dict) -> dict:
     return my_dict
 
 
+def html_graph(x_data, y_data, y_label: str, value_name: str):
+    df = pd.DataFrame({"Time": x_data,
+                       "Tomorrow": y_data[0],
+                       "Open": y_data[1]})
+
+    df_long = df.melt(id_vars=['Time'], value_vars=["Tomorrow", "Open"],
+                      var_name=value_name, value_name=y_label)
+
+    fig = px.scatter(df_long, x='Time', y=y_label, color=value_name,
+                     color_discrete_map={"Tomorrow": "seagreen", "Open": "sienna"})
+    fig.update_layout(plot_bgcolor='tan', paper_bgcolor='lightblue')
+
+    return fig.to_html(full_html=False)
+
+
 def create_html_graph(x_data, y_data, title: str, y_label: str):
-    figure = px.line(x=x_data, y=y_data)
+    figure = px.scatter(x=x_data, y=y_data)
 
     figure.update_layout(title=title, xaxis_title='Timestamp', yaxis_title=y_label)
     figure.data[0].name = 'Accu-Weather'
