@@ -1,4 +1,4 @@
-package com.itay.weather.dto;
+package com.itay.weather.miner_objects;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;

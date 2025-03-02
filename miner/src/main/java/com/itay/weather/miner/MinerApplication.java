@@ -1,6 +1,6 @@
-package com.itay.weather.m;
+package com.itay.weather.miner;
 
-import com.itay.weather.m.component.MinerList;
+import com.itay.weather.miner.component.MinerList;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;

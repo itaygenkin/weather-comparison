@@ -1,11 +1,11 @@
-package com.itay.weather.m.service;
+package com.itay.weather.miner.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.itay.weather.dto.AbstractMiner;
 import com.itay.weather.dto.Location;
 import com.itay.weather.dto.WeatherSample;
-import com.itay.weather.m.component.MinerList;
-import com.itay.weather.m.producer.MinerProducer;
+import com.itay.weather.miner.component.MinerList;
+import com.itay.weather.miner.producer.MinerProducer;
+import com.itay.weather.miner_objects.AbstractMiner;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

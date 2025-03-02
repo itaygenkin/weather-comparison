@@ -1,4 +1,4 @@
-package com.itay.weather.m.configuration;
+package com.itay.weather.miner.configuration;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.Getter;
