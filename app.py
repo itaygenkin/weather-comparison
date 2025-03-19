@@ -52,14 +52,14 @@ def fetch_weather():
     ## visualization
     # create temperature plot
     temperature_html_graph = helpers.html_graph(x_data=data["tomorrow-weather"]['timestamp'],
-                                          y_data=[data['tomorrow-weather']['temperature'],
-                                                  data['open-weather']['temperature']],
-                                          y_label='Temperature (°C)', value_name='Temperature')
+                                                y_data=[data['tomorrow-weather']['temperature'],
+                                                        data['open-weather']['temperature']],
+                                                y_label='Temperature (°C)', value_name='Temperature')
 
     humidity_html_graph = helpers.html_graph(x_data=data["tomorrow-weather"]['timestamp'],
-                                       y_data=[data['tomorrow-weather']['humidity'],
-                                               data['open-weather']['humidity']],
-                                       y_label='Humidity (%)', value_name='Humidity')
+                                             y_data=[data['tomorrow-weather']['humidity'],
+                                                     data['open-weather']['humidity']],
+                                             y_label='Humidity (%)', value_name='Humidity')
 
     return render_template('comparison.html',
                            temperature_plot=temperature_html_graph,
@@ -74,7 +74,7 @@ def trigger():
     params = {'city': request.values.get('city'),
               'country': request.values.get('country')}
 
-    response = requests.post(url, json=params, headers=headers)
+    response = requests.put(url, json=params, headers=headers)
     app.logger.info(f"trigger:\tparams({params});\tresponse code: {response.status_code}")
 
     if response.status_code >= 400:
