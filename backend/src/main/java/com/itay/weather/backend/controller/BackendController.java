@@ -36,9 +36,9 @@ public class BackendController {
         return ResponseEntity.ok(weatherPacket);
     }
 
-    @PostMapping("/trigger")
+    @PutMapping("/trigger")
     public ResponseEntity<Void> triggerMiners(@RequestBody Location location){
-        log.info("POST request: location_param: '{}'", location);
+        log.info("PUT request: location_param: '{}'", location);
 
         if (backendService.trigger(location))
             return ResponseEntity.ok().build();

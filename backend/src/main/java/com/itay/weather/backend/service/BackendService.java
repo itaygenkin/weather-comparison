@@ -60,7 +60,7 @@ public class BackendService {
         try {
             // create http entity
             HttpEntity<String> httpEntity = createHttpEntity(location);
-            ResponseEntity<Void> response = restTemplate.postForEntity(uri, httpEntity, Void.class);
+            ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.PUT, httpEntity, Void.class);
 
             log.info("response status: {}", response.getStatusCode());
 
