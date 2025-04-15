@@ -30,7 +30,7 @@ public class Location {
     public String toString(){
         if (city == null || country == null)
             return "location=NULL";
-//        return String.format("location=%s-%s", city, country);
+
         return String.format("%s-%s", city, country);
     }
 
@@ -52,6 +52,8 @@ public class Location {
         HashMap<String, String> map = new HashMap<>();
         map.put("city", this.city);
         map.put("country", this.country);
+        map.put("latitude", Double.toString(latitude));
+        map.put("longitude", Double.toString(longitude));
         return map;
     }
 }

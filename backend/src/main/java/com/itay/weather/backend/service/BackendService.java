@@ -10,11 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -52,7 +53,6 @@ public class BackendService {
     }
 
     public boolean trigger(Location location) {
-        // TODO: use UriComponentBuilder
         String uri = UriComponentsBuilder
                 .fromHttpUrl(minerProperties.getBaseUrl())
                 .path("fetch")
@@ -77,12 +77,41 @@ public class BackendService {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         // create body to the post request
-        Map<String, String> bodyParams = new HashMap<>();
-        bodyParams.put("city", location.getCity());
-        bodyParams.put("country", location.getCountry());
+        Map<String, String> bodyParams = location.toHashMap();
 
         // create request entity
         String reqBodyData = new ObjectMapper().writeValueAsString(bodyParams);
         return new HttpEntity<>(reqBodyData, headers);
+    }
+
+    public boolean addLocation(Location location) {
+        String uri = UriComponentsBuilder
+                .fromHttpUrl(processorProperties.getBaseUrl())
+                .path("addLocation")
+                .toUriString();
+        try {
+            HttpEntity<String> httpEntity = createHttpEntity(location);
+            ResponseEntity<Void> response = restTemplate.postForEntity(uri, httpEntity, Void.class);
+            return response.getStatusCode() == HttpStatus.OK;
+        } catch (HttpClientErrorException | JsonProcessingException e) {
+            log.error(e.getMessage());
+            log.error(e.toString());
+            return false;
+        }
+    }
+
+    public List<Location> getCities() {
+        String uri = UriComponentsBuilder
+                .fromHttpUrl(processorProperties.getBaseUrl())
+                .path("cities")
+                .toUriString();
+
+        List<Location> response = restTemplate.getForEntity(uri, List.class).getBody();
+        if (response == null) {
+            log.info("response from <getCities> is null");
+            return null;
+        }
+        log.info("response length from <getCities>: {}", response.size());
+        return response;
     }
 }

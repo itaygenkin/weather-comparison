@@ -1,7 +1,7 @@
 package com.itay.weather.processor.model;
 
 import com.itay.weather.dto.Location;
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Data
@@ -11,16 +11,21 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Embeddable
+@Entity
 public class LocationModel {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @Column(nullable = false)
     private String city;
+    @Column(nullable = false)
     private String country;
+    @Column(nullable = false)
     private double latitude;
+    @Column(nullable = false)
     private double longitude;
 
     public boolean equals(Location location){
-        if (this.city.equals(location.getCity()) && this.country.equals(location.getCountry()))
-            return true;
-        return Math.abs(this.latitude - location.getLatitude()) < 0.1 &&
-                Math.abs(this.longitude - location.getLongitude()) < 0.1;
+        return this.city.equals(location.getCity()) && this.country.equals(location.getCountry());
     }
 }

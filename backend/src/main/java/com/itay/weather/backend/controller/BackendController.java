@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 @Slf4j
@@ -45,4 +47,17 @@ public class BackendController {
         return ResponseEntity.badRequest().build();
     }
 
+    @PostMapping("/addLocation")
+    public ResponseEntity<Void> addLocation(@RequestBody Location location) {
+        log.info("POST request: location_param: '{}'", location);
+        if (backendService.addLocation(location))
+            return ResponseEntity.ok().build();
+        return ResponseEntity.badRequest().build();
+    }
+
+    @GetMapping("/cities")
+    public List<Location> getCities() {
+        log.info("GET request: cities");
+        return backendService.getCities();
+    }
 }
