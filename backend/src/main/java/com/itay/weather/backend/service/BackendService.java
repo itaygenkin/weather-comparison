@@ -121,7 +121,6 @@ public class BackendService {
         } catch (RestClientException e) {
             log.error(e.getMessage());
         }
-        log.info("response length from <getCities>: {}", response.size());
-        return response;
+        return new ArrayList<>();
     }
 }
