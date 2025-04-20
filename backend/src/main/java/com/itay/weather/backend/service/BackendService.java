@@ -8,6 +8,7 @@ import com.itay.weather.dto.Location;
 import com.itay.weather.dto.WeatherPacket;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -15,6 +16,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -106,10 +108,18 @@ public class BackendService {
                 .path("cities")
                 .toUriString();
 
-        List<Location> response = restTemplate.getForEntity(uri, List.class).getBody();
-        if (response == null) {
-            log.info("response from <getCities> is null");
-            return null;
+        try {
+            ResponseEntity<List<Location>> response = restTemplate.exchange(
+                    uri,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<>() {
+                    }
+            );
+            log.info("response status: {}", response.getStatusCode());
+            return response.getBody();
+        } catch (RestClientException e) {
+            log.error(e.getMessage());
         }
         log.info("response length from <getCities>: {}", response.size());
         return response;

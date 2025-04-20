@@ -65,9 +65,10 @@ public class ProcessorController {
     }
 
     @GetMapping("/cities")
-    public List<LocationModel> getCities() {
+    public ResponseEntity<List<LocationModel>> getCities() {
         log.info("function call: 'getCities'");
-        return processorService.getLocations();
+        List<LocationModel> locations = processorService.getLocations();
+        return new ResponseEntity<>(locations, HttpStatus.OK);
     }
 
     @DeleteMapping("/cities")
