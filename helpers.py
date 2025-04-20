@@ -114,3 +114,8 @@ def get_default_time():
     default_start_time = now.replace(hour=0, minute=0).strftime('%Y-%m-%dT%H:%M')
     default_end_time = now.strftime('%Y-%m-%dT%H:%M')
     return default_start_time, default_end_time
+
+
+def convert_location_to_city_format(locations):
+    return [{"name": location['city'], "country": location['country'],
+            'coords': [location['latitude'], location['longitude']]} for location in locations]

@@ -6,10 +6,12 @@ import helpers
 
 app = Flask(__name__)
 # Configure Flask logging
-app.logger.setLevel(logging.INFO)  # Set log level to INFO
-handler = logging.FileHandler('app.log')  # Log to a file
+formatter = logging.Formatter("[%(asctime)s] %(levelname)s in %(module)s: %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
+handler = logging.StreamHandler()
+handler.setFormatter(formatter)
+
 app.logger.addHandler(handler)
-# TODO: add date and time to the logs
+app.logger.setLevel(logging.INFO)
 
 
 @app.route('/')
@@ -84,6 +86,23 @@ def trigger():
     return render_template('index.html',
                            default_start_time=default_time[0],
                            default_end_time=default_time[1])
+
+
+def fetch_cities():
+    try:
+        response = requests.get("http://localhost:8080/api/cities")
+        cities = response.json()
+        logging.info(f"Cities fetched:\t{cities}")
+        return helpers.convert_location_to_city_format(cities)
+    except Exception as e:
+        logging.error(f"Failed to fetch cities: {e}")
+        return []
+
+
+@app.route('/map')
+def show_map():
+    cities = fetch_cities()
+    return render_template('map.html', cities=cities)
 
 
 if __name__ == '__main__':
