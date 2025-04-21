@@ -1,6 +1,8 @@
 package com.itay.weather.miner_objects;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.itay.weather.dto.Location;
+import com.itay.weather.dto.WeatherSample;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;

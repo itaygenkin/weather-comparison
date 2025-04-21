@@ -18,11 +18,16 @@ public class WeatherSampleModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    @Column(nullable = false)
     private String source;
     @Embedded
+    @Column(nullable = false)
     private Location location;
+    @Column(nullable = false)
     private LocalDateTime time;
+    @Column(nullable = false)
     private Double temperature;
+    @Column(nullable = false)
     private Integer humidity;
 
     public WeatherSampleModel(WeatherSample weatherSample){
