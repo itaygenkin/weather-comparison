@@ -28,4 +28,13 @@ public class LocationModel {
     public boolean equals(Location location){
         return this.city.equals(location.getCity()) && this.country.equals(location.getCountry());
     }
+
+    public Location toLocationDto() {
+        return Location.builder()
+                .city(this.city)
+                .country(this.country)
+                .longitude(this.longitude)
+                .longitude(this.longitude)
+                .build();
+    }
 }

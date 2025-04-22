@@ -90,20 +90,42 @@ public class ProcessorService {
         return weatherRepository.findAll().stream().map(WeatherSampleModel::toWeatherSample).toList();
     }
 
-    public WeatherPacket getWeatherDataByLocation(Location location) {
-        List<WeatherSample> weatherSamples = weatherRepository.findAll()
+    public WeatherPacket getWeatherDataByLocation(long locationId) {
+        // TODO: test method
+        Optional<LocationModel> optionalLocation = locationRepository.findById(locationId);
+        if (optionalLocation.isEmpty()) {
+            log.warn("failed to get weather data by location because location with id({}) not found", locationId);
+            return null;
+        }
+
+        Location location = optionalLocation.get().toLocationDto();
+        List<WeatherSample> weatherSamples = weatherRepository.getAllByLocation(location)
                 .stream()
                 .map(WeatherSampleModel::toWeatherSample)
                 .toList();
-        return new WeatherPacket(weatherSamples, location);  // WeatherPacket constructor filters the samples by location
+
+        return new WeatherPacket(weatherSamples, location);
     }
 
-    public WeatherPacket getWeatherDataByLocationAndTime(Location location, LocalDateTime start, LocalDateTime end) {
-        List<WeatherSample> weatherSamples = weatherRepository.findAllByTimeBetween(start, end)
+
+    public WeatherPacket getWeatherDataByLocationAndTime(Location location, String start, String end) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime fromTime;
+        LocalDateTime toTime;
+
+        try {
+            fromTime = LocalDateTime.parse(start, formatter);
+            toTime = LocalDateTime.parse(end, formatter);
+        } catch (DateTimeParseException e) {
+            log.error(e.getMessage());
+            return null;
+        }
+
+        List<WeatherSample> weatherSamples = weatherRepository.findAllByTimeBetween(fromTime, toTime)
                 .stream()
                 .map(WeatherSampleModel::toWeatherSample)
                 .toList();
-        return new WeatherPacket(weatherSamples, location, start, end);
+        return new WeatherPacket(weatherSamples, location, fromTime, toTime);
     }
 
     public void deleteWeatherDataByLocation(Location location) {
