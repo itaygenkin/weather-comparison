@@ -40,8 +40,8 @@ public class BackendService {
                 .path("weather")
                 .queryParam("city", location.getCity())
                 .queryParam("country", location.getCountry())
-                .queryParam("from", from)
-                .queryParam("to", to)
+                .queryParam("start", from)
+                .queryParam("end", to)
                 .toUriString();
 
         try {

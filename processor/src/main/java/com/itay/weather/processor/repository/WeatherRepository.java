@@ -10,7 +10,8 @@ import java.util.List;
 
 @Repository
 public interface WeatherRepository extends JpaRepository<WeatherSampleModel, Long> {
-    // TODO: test methods
-    List<WeatherSampleModel> findAllByLocation(Location location);
-    List<WeatherSampleModel> findAllByLocationAndTimeBetween(Location location, Timestamp from, Timestamp to);
+
+    List<WeatherSampleModel> findAllByTimeBetween(LocalDateTime startTime, LocalDateTime endTime);
+
+    List<WeatherSampleModel> getAllByLocation(Location location);
 }

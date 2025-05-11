@@ -39,8 +39,6 @@ public class ProcessorController {
 
         if (data == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        WeatherPacket data = processorService.getWeatherDataByLocationAndTime(location, fromTime, toTime);
 
         return new ResponseEntity<>(data, HttpStatus.OK);
     }

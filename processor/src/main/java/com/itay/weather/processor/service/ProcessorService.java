@@ -16,6 +16,8 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -124,8 +126,9 @@ public class ProcessorService {
         List<WeatherSample> weatherSamples = weatherRepository.findAllByTimeBetween(fromTime, toTime)
                 .stream()
                 .map(WeatherSampleModel::toWeatherSample)
+                .filter((ws) -> ws.isInTime(fromTime, toTime))
                 .toList();
-        return new WeatherPacket(weatherSamples, location, fromTime, toTime);
+        return new WeatherPacket(weatherSamples, location);
     }
 
     public void deleteWeatherDataByLocation(Location location) {
@@ -185,5 +188,9 @@ public class ProcessorService {
 
         locationRepository.deleteById(id);
         log.info(toLog);
+    }
+
+    public void deleteAllWeatherData() {
+        weatherRepository.deleteAll();
     }
 }

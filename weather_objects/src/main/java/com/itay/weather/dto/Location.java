@@ -23,10 +23,6 @@ public class Location {
         this.country = country;
     }
 
-    public String toStringByDegrees(){
-        return String.format("location=%f,%f", latitude, longitude);
-    }
-
     public String toString(){
         if (city == null || country == null)
             return "location=NULL";
